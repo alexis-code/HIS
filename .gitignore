@@ -2,6 +2,7 @@
 *.pot
 *.pyc
 *.env
+manage.py
 *.config
 apps/HospitalApp/templates/includes/footer.html
 __pycache__
