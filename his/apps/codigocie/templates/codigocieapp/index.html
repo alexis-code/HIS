@@ -1,0 +1,128 @@
+{% extends 'hospitalapp/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row">
+    <a class="btn btn-warning" href="{% url 'createCodigoCie' %}">Registrar Código Cie</a>
+</div>
+<br>
+<div class="row justify-content-center">
+    <div class="col-sm-12 col-sm-offset-2">
+        <div class="row">
+            <div class="col-md-12">
+                {% if messages %}
+                    <div class="row">
+                        <div class="col">
+                            {% for message in messages %}
+                            {% if message.tags == "error" %}
+                            <div class="alert alert-danger fade show" role="alert">
+                                {% else %}
+                                <div class="alert alert-success fade show" role="alert">
+                                    {% endif %}
+                                    <strong>{{message}}</strong>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <i class="tim-icons icon-simple-remove"></i>
+                                    </button>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                </div>
+                <div class="card">
+                    <h3 class="row justify-content-center"><strong>Listado de Codigos Cie</strong></h3>
+                    <div class="table-responsive" style="box-shadow: 0 0 5px transparent; border-radius: 15px;">
+                        <table class="table table-hover" id="tblmedicamento">
+                            |<a href="{% url 'indexCodigoCieActivo' %}" class="badge badge-success">Activos</a>|
+                            <a href="{% url 'indexCodigoCieAnulado' %}" class="badge badge-success">Anulados</a>|
+                            <a href="{% url 'indexCodigoCie' %}" class="badge badge-success">Todos</a>|
+                            <thead class="text-info">
+                                <tr>
+                                    <th class="th-sm" scope="col">Código CIE</th>
+                                    <th class="th-sm" scope="col">Diagnóstico</th>
+                                    <th class="th-sm" scope="col">Estado</th>
+                                    <th class="th-sm" scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for codigocie in object_list %}
+                                <tr>
+                                    <td>{{ codigocie.codigo_cie }}</td>
+                                    <td>{{ codigocie.diagnostico }}</td>
+                                    <td>{{ codigocie.estado }}</td>
+                                    <td>
+                                        <a href="/codigocie/update/{{ codigocie.id_codigo }}" rel="tooltip"
+                                            data-placement="bottom" title="Editar"><i class="material-icons"
+                                                style="font-size: 20px;color: darkcyan;">edit</i></a>
+                                        <a href="javascript:cambiar_estado({{ codigocie.id_codigo }})" rel="tooltip"
+                                            data-placement="bottom" title="Cambiar Estado"><i class="material-icons"
+                                                style="font-size: 20px;color: darkcyan;">autorenew</i></a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+<script>
+    $(document).ready(function () {
+        $('#tblmedicamento').DataTable({
+            "language": {
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "sZeroRecords": "No se encontraron resultados",
+                "sEmptyTable": "Ningún dato disponible en esta tabla",
+                "sSearch": "Buscar:",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sLast": "Último",
+                    "sNext": "Siguiente",
+                    "sPrevious": "Anterior"
+                },
+            },
+            paging: true,
+            filter: true,
+            info: false,
+            autoWidth: false,
+            responsive: true,
+            destroy: true,
+            ordering: false,
+        })
+    });
+</script>
+<script>
+    function cambiar_estado(id_codigocie) {
+        $.confirm({
+            title: 'Cambiar Estado!',
+            content: 'Desea confirmar?',
+            buttons: {
+                confirmar: {
+                    btnClass: 'btn-success',
+                    action: function () {
+                        $.ajax({
+                            type: 'POST',
+                            url: "{% url 'CodigoCieChangeSatus' %}",
+                            data: {
+                                "csrfmiddlewaretoken": "{{ csrf_token }}",
+                                "pk": id_codigocie,
+                            },
+                            success: function (response) {
+                                window.location.href = '{% url "indexCodigoCieActivo" %}';
+                            }
+                        });
+                    }
+                },
+                cancelar: {
+                    btnClass: 'btn-danger',
+                },
+            }
+        });
+
+    }
+</script>
+{% endblock javascripts %}

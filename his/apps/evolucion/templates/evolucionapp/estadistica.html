@@ -1,0 +1,181 @@
+{% extends 'hospitalapp/base.html' %}
+{% load static %}
+{% block stylesheets %}
+<script src="https://code.highcharts.com/highcharts.src.js"></script>
+{% endblock stylesheets %}
+{% block content %}
+<div class="content">
+  <div class="row">
+    <div class="card">
+      {% if messages %}
+      <div class="row">
+        <div class="col">
+          {% for message in messages %}
+          {% if message.tags == "error" %}
+          <div class="alert alert-danger fade show" role="alert">
+            {% else %}
+            <div class="alert alert-success fade show" role="alert">
+              {% endif %}
+              <strong>{{message}}</strong>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <i class="tim-icons icon-simple-remove"></i>
+              </button>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+        <div class="card-header">
+          <div class="row">
+            <h4>Control de Estadistica de Laboratorio</h4>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <h6>Seleccione el rango de fecha:</h6>
+          </div>
+          <form action="/evolucion/estadistica/generar/" method="POST">
+            <div class="row justify-content-center">
+              <input type="hidden" name="pk" value="{{id_historia}}" />
+              <div class="col-sm-4">
+                <input type="date" class="form-control datetimepicker" name="fecha_desde" id="fecha_inicio"
+                  value="{{fechadesde}}" required>
+              </div>
+              <div class="col-sm-4">
+                <input type="date" class="form-control datetimepicker" name="fecha_hasta" id="fecha_fin"
+                  value="{{fechahasta}}" required>
+              </div>
+            </div>
+            <div class="row justify-content-center">
+              <input type="submit" class="btn btn-success btn-sm" value="Generar">
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="card card-chart">
+      <div class="card-body">
+        <figure class="highcharts-figure">
+          <div id="container"></div>
+
+        </figure>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+
+  {% block javascripts %}
+
+  <script>
+    let arreglo = {{ fecha| safe}}
+    console.log(arreglo)
+    Highcharts.chart('container', {
+
+      title: {
+        text: 'Estadística de laboratorio'
+      },
+
+      subtitle: {
+        text: 'Hospital San Martín de Porres'
+      },
+      xAxis: {
+        categories: arreglo
+      },
+
+      yAxis: {
+        title: {
+          text: 'Laboratorios en %'
+        }
+      },
+
+      series: [{
+        name: 'GB',
+        data: {{ datos_gb| safe}}
+      }, {
+        name: 'HB',
+        data: {{ datos_hb| safe}}
+      }, {
+        name: 'PH',
+        data: {{ datos_ph| safe}}
+      }, {
+        name: 'GOT',
+        data: {{ datos_got| safe}}
+      }, {
+        name: 'NEU',
+        data: {{ datos_neu| safe}}
+      }, {
+        name: 'HTCO',
+        data: {{ datos_htco| safe}}
+      }, {
+        name: 'PCO',
+        data: {{ datos_pco| safe}}
+      }, {
+        name: 'GPT',
+        data: {{ datos_gpt| safe}}
+      }, {
+        name: 'LIN',
+        data: {{ datos_lin| safe}}
+      }, {
+        name: 'CR',
+        data: {{ datos_cr| safe}}
+      }, {
+        name: 'HCO',
+        data: {{ datos_hco| safe}}
+      }, {
+        name: 'PT',
+        data: {{ datos_pt| safe}}
+      }, {
+        name: 'CAY',
+        data: {{ datos_cay| safe}}
+      }, {
+        name: 'UREA',
+        data: {{ datos_urea| safe}}
+
+      }, {
+        name: 'ALB',
+        data: {{ datos_alb| safe}}
+      }, {
+        name: 'PO',
+        data: {{ datos_po| safe}}
+      }, {
+        name: 'PLQ',
+        data: {{ datos_plq| safe}}
+      }, {
+        name: 'NA',
+        data: {{ datos_na| safe}}
+      }, {
+        name: 'EB',
+        data: {{ datos_eb| safe}}
+      }, {
+        name: 'CL',
+        data: {{ datos_cl| safe}}
+      }, {
+        name: 'K',
+        data: {{ datos_k| safe}}
+      }, {
+        name: 'LACT',
+        data: {{ datos_lact| safe}}
+      }, {
+        name: 'DD',
+        data: {{ datos_dd| safe}}
+      }],
+
+      responsive: {
+      rules: [{
+        condition: {
+          maxWidth: 500
+        },
+        chartOptions: {
+          legend: {
+            layout: 'horizontal',
+            align: 'center',
+            verticalAlign: 'bottom'
+          }
+        }
+      }]
+    }
+  });
+  </script>
+  {% endblock javascripts %}

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+    <title>HIS-Permiso Denegado</title>
+    <link rel="shortcut icon" href="{% static 'assets/img/hj.ico' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'permission/permiso.css' %}"/>
+</head>
+<body>
+    <!-- partial:index.partial.html -->
+    <div class="container">
+      <h1>4<div class="lock"><div class="top"></div><div class="bottom"></div>
+        </div>3</h1><p>Acceso Denegado! - no tienes permiso para ingresar a esta página.</p> <br>
+        <p>Contactate con el administrador del sistema.</p>
+    </div>
+    <script src="{% static 'permission/script.js' %}"></script>
+</body>
+</html>

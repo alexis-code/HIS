@@ -1,0 +1,233 @@
+{% extends 'hospitalapp/base.html' %}
+{% load static %}
+{% block title %}
+Evolución - Lista
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            <a class="btn btn-success btn-sm" href="/evolucion/create/{{id_historia}}">Nueva Evolucion</a>
+            <a class="btn btn-warning btn-sm" href="/epicrisis/create/{{id_evolucionU}}">Fomulario Epicrisis</a>
+            <a class="btn btn-warning btn-sm" href="/epicrisis/index/{{id_historia}}">Epicrisis</a>
+        </div>
+        <div class="col-stats">
+            <a class="btn btn-success btn-sm btn-round" rel="tooltip" data-placement="left" data-toggle="modal"
+                data-target="#estadistica" title="Estadistica de Laboratorios"><i class="material-icons"
+                    style="font-size: 20px;color: white;">show_chart</i></a>
+            <a class="btn btn-success btn-sm btn-round" rel="tooltip" data-placement="left" data-toggle="modal"
+                data-target="#examenfisico" title="Estadistica de Examenes Físicos"><i class="material-icons"
+                    style="font-size: 20px;color: white;">bar_chart</i></a>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <form action="/evolucion/index/byfecha" method="get">
+            <div class="row">
+                <input type="hidden" name="cod_hc" value="{{id_historia}}">
+                <div class="col">
+                    <input type="date" name="fecha_desde" class="form-control" id="fecha_desdehc" />
+                </div>
+                <div class="col">
+                    <input type="date" name="fecha_hasta" class="form-control" id="fecha_hastahc" />
+                </div>
+                <div class="col">
+                    <button type="submit" class="btn btn-default btn-sm">Buscar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <br>
+    {% if messages %}
+    <div class="row">
+        <div class="col">
+            {% for message in messages %}
+            {% if message.tags == "error" %}
+            <div class="alert alert-danger fade show" role="alert">
+                {% else %}
+                <div class="alert alert-success fade show" role="alert">
+                    {% endif %}
+                    <strong>{{message}}</strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <i class="tim-icons icon-simple-remove"></i>
+                    </button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        <br>
+        <div class="row">
+            {% for evolucion in object_list %}
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header card-header-success">
+                        <h4 class="card-title"><strong style="font-weight: bold;">Fecha de la
+                                Evolucion:</strong><br>
+                            {{evolucion.fecha_hora|date:"d-m-Y H:i" }}</h4>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-title"><strong style="font-weight: bold;">Paciente:</strong>
+                            {{evolucion.id_historiaclinicaFK.id_pacienteFK.nombre }}
+                            {{evolucion.id_historiaclinicaFK.id_pacienteFK.apellido_paterno}}
+                            {{evolucion.id_historiaclinicaFK.id_pacienteFK.apellido_materno}}</p>
+                        <p class="card-title"><strong style="font-weight: bold;">Edad:</strong>
+                            {{evolucion.id_historiaclinicaFK.id_pacienteFK.edad}}</p>
+                        <p class="card-title"><strong style="font-weight: bold;">Dias en Area:</strong>
+                            {{evolucion.dias_area}}</p>
+                        <p class="card-title"><strong style="font-weight: bold;">Nro. Cama:</strong>
+                            {{evolucion.nro_cama}}
+                        </p>
+                        <span class="material-icons" style="font-size: 20px;">
+                            account_circle
+                        </span>
+                        <strong style="font-weight: bold;">Dr(a):</strong>: {{evolucion.id_medicoFK.first_name }}
+                        {{evolucion.id_medicoFK.last_name }} <br>
+                        <strong style="font-weight: bold;">Ultimo en Modificar:</strong>:
+                        {{evolucion.medico_updated}}
+                        <hr>
+                        <div class="card-footer text-right">
+                            <a rel="tooltip" data-placement="bottom" title="Crear Indicación"
+                                href="/indicacion/create/{{evolucion.id_evolucionPK }}"><i class="material-icons"
+                                    style="font-size: 30px;color: darkcyan;">note_add</i></a>|
+                            <a rel="tooltip" data-placement="bottom" title="Ver Indicación"
+                                href="/indicacion/index/{{evolucion.id_evolucionPK }}"><i class="material-icons"
+                                    style="font-size: 30px;color: darkcyan;">list</i></a>
+                            {% if evolucion.id_evolucionPK != id_evolucionP %}
+                            <a rel="tooltip" data-placement="bottom" title="Ver Detalle"
+                                href="/evolucion/detalle/{{evolucion.id_evolucionPK }}"><i class="material-icons"
+                                    style="font-size: 30px;color: darkcyan;">receipt_long</i></a>|
+                            <a rel="tooltip" data-placement="bottom" title="Ver Cultivos Solicitados"
+                                href="/evolucion/cultivo/pendientes/{{evolucion.id_evolucionPK}}"><i
+                                    class="material-icons" style="font-size: 30px;color: darkcyan;">fact_check</i></a>|
+                            <a rel="tooltip" data-placement="bottom" title="Editar"
+                                href="/evolucion/update/{{ evolucion.id_evolucionPK }}"><i class="material-icons"
+                                    style="font-size: 30px;color: darkcyan;">edit</i></a>|
+                            <a rel="tooltip" data-placement="bottom" title="Anular"
+                                href="javascript:cambiar_estado({{ evolucion.id_evolucionPK }})"><i
+                                    class="material-icons" style="font-size: 30px;color: darkcyan;">autorenew</i></a>|
+                            {% endif %}
+                            {% if evolucion.id_evolucionPK == id_evolucionP %}
+                            <a rel="tooltip" data-placement="bottom"
+                                title="La información de esta evolución se encuentra en la historia clinica de {{evolucion.id_historiaclinicaFK.id_pacienteFK.nombre}}"
+                                href="/historia/detalle/{{evolucion.id_historiaclinicaFK_id}}"><i class="material-icons"
+                                    style="font-size: 30px;color: darkcyan;">info</i></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="modal fade" id="estadistica" tabindex="-1" role="">
+        <div class="modal-dialog modal-login" role="document">
+            <div class="modal-content">
+                <div class="card card-signup card-plain">
+                    <div class="modal-header">
+                        <h5 class="modal-title card-title">Elija la fecha</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <i class="material-icons">clear</i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/evolucion/estadistica/generar/" method="POST">
+                            <div class="row justify-content-center">
+                                <input type="hidden" name="pk" value="{{id_historia}}" />
+                                <div class="col-sm">
+                                    <input type="date" class="form-control datetimepicker" name="fecha_desde"
+                                        id="fecha_inicio" required>
+                                </div>
+                                <div class="col-sm">
+                                    <input type="date" class="form-control datetimepicker" name="fecha_hasta"
+                                        id="fecha_fin" required>
+                                </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <input type="submit" class="btn btn-success btn-sm" value="Generar">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="examenfisico" tabindex="-1" role="">
+        <div class="modal-dialog modal-login" role="document">
+            <div class="modal-content">
+                <div class="card card-signup card-plain">
+                    <div class="modal-header">
+                        <h5 class="modal-title card-title">Elija la fecha</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <i class="material-icons">clear</i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/evolucion/estadistica/examenfisico/generar/" method="POST">
+                            <div class="row justify-content-center">
+                                <input type="hidden" name="pk" value="{{id_historia}}" />
+                                <div class="col-sm">
+                                    <input type="date" class="form-control datetimepicker" name="fecha_desde"
+                                        id="fecha_inicio" required>
+                                </div>
+                                <div class="col-sm">
+                                    <input type="date" class="form-control datetimepicker" name="fecha_hasta"
+                                        id="fecha_fin" required>
+                                </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <input type="submit" class="btn btn-success btn-sm" value="Generar">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center pagination">
+        <span class="badge badge-pill badge-default">
+            {% if page_obj.has_previous %}
+            <a class="btn btn-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+            {% endif %}
+
+            <span class="current">
+                Pagina {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+            <a class="btn btn-link" href="?page={{ page_obj.next_page_number }}"> &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+    {% endblock %}
+    {% block javascripts%}
+    <script>
+        function cambiar_estado(id_evolucion) {
+            $.confirm({
+                title: 'Cambiar Estado!',
+                content: 'Desea confirmar?',
+                buttons: {
+                    confirmar: {
+                        btnClass: 'btn-success',
+                        action: function () {
+                            $.ajax({
+                                type: 'POST',
+                                url: "{% url 'EvolucionChangeSatus' %}",
+                                data: {
+                                    "csrfmiddlewaretoken": "{{ csrf_token }}",
+                                    "pk": id_evolucion,
+                                },
+                            }).done(function (data) {
+                                location.href = "/evolucion/index/" + data
+                            })
+                        }
+                    },
+                    cancelar: {
+                        btnClass: 'btn-danger',
+                    },
+                }
+            });
+
+        }
+    </script>
+    {% endblock javascripts %}

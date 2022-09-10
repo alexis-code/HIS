@@ -1,0 +1,253 @@
+{% extends 'hospitalapp/base.html' %}
+{% load static %}
+{% load auth_extras %}
+{% block title %}
+
+Solicitudes de Cultivo|Lista
+
+{% endblock %}
+{% block stylesheets %}
+<style>
+    .unshow {
+        display: none;
+    }
+</style>
+{% endblock stylesheets %}
+{% block content %}
+<div class="content">
+    <div class="row justify-content-center">
+        <div class="col-sm-12 col-sm-offset-2">
+            {% if messages %}
+            <div class="row">
+                <div class="col">
+                    {% for message in messages %}
+                    {% if message.tags == "error" %}
+                    <div class="alert alert-danger fade show" role="alert">
+                        {% else %}
+                        <div class="alert alert-success fade show" role="alert">
+                            {% endif %}
+                            <strong>{{message}}</strong>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <i class="tim-icons icon-simple-remove"></i>
+                            </button>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="row">
+                                <div class="col-sm">
+                                   |<a href="/evolucion/cultivo/pendientes/{{id}}"
+                                        class="badge badge-success">Pendientes</a>|
+                                    <a href="/evolucion/cultivo/resultados/{{id}}"
+                                        class="badge badge-success">Con Resultados</a>|
+                                </div>
+                            </div>
+                            <h3 class="row justify-content-center"><strong>Lista de Cultivos Solicitados</strong></h3>
+                            <div class="table" style="box-shadow: 0 0 5px transparent; border-radius: 15px;">
+                                <table class="table table-hover" id="tblresultcultivo">
+                                    <thead class="text-info">
+                                        <tr>
+                                            <th class="th-sm" scope="col">Cultivo</th>
+                                            <th class="th-sm" scope="col">Fecha</th>
+                                            <th class="th-sm" scope="col">Estado</th>
+                                            <th class="th-sm" scope="col">Acción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for cultivo in object_list %}
+                                        <tr>
+                                            <td>{{ cultivo.id_cultivoFK.nombre }}</td>
+                                            <td>{{ cultivo.fecha|date:"d-m-Y" }}</td>
+                                            <td>{{ cultivo.estado }}</td>
+                                            <td>
+                                                {% if not 'resultados' in request.path %} 
+                                                <a onclick="mostrar('{{cultivo.id_cultivoFK_id}}','{{cultivo.id_evolucionFK_id}}')"
+                                                    href="#" rel="tooltip" data-placement="bottom"
+                                                    title="Registrar Resultado"><i class="material-icons"
+                                                        style="font-size: 20px;color: darkcyan;">done</i></a>
+                                                {% endif %}
+                                                {% if not 'pendientes' in request.path %} 
+                                                <a href="/evolucion/update/resultado_cultivo/{{ cultivo.id_cultivoFK_id}}"
+                                                    rel="tooltip" data-placement="bottom" title="Editar"><i
+                                                        class="material-icons"
+                                                        style="font-size: 20px;color: darkcyan;">edit</i></a>
+                                                        <a href="javascript:cambiar_estado({{ cultivo.id_cultivoFK_id }},{{ resultado.id_evolucionFK_id }})"
+                                                    rel="tooltip" data-placement="bottom" title="Anular"><i
+                                                        class="material-icons"
+                                                        style="font-size: 20px;color: darkcyan;">block</i></a>
+                                                <a href="/evolucion/detalle_cultivo/{{ cultivo.id_cultivoFK_id }}"
+                                                    rel="tooltip" data-placement="bottom" title="Ver Detalle"><i
+                                                        class="material-icons"
+                                                        style="font-size: 20px;color: darkcyan;">receipt_long</i></a>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="resultadoCultivo" tabindex="-1" role="">
+                <div class="modal-dialog modal-login" role="document">
+                    <div class="modal-content">
+                        <div class="card card-signup card-plain">
+                            <div class="modal-header">
+                                <h5 class="modal-title card-title">Registrar Resultado</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <i class="material-icons">clear</i>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form class="form" method="POST">
+                                    <input type="hidden" name="csrf_token" value="{{csrf_token}}">
+                                    <input type="hidden" name="action2" value="add_resultcultivo">
+                                    <input type="hidden" name="id_cultivoFK" id="idcultivo">
+                                    <input type="hidden" name="id_evolucionFK" id="idevolucion">
+                                    <input type="hidden" name="medico" value="{{user.first_name}} {{user.last_name}}">
+                                    <div class="card-body">
+                                        <div class="form-group bmd-form-group text-center">
+                                            <h3 class="modal-title card-title" id="nombrecultivo"></h3>
+                                        </div>
+
+                                        <div class="form-group bmd-form-group">
+                                            <select class="form-control" name="resultado_probable" id="patogeno">
+                                                <option value="1" select>No se aislo ningun patogeno</option>
+                                                <option value="2">Se asilo patogeno</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group bmd-form-group unshow" id="nombrepatogeno">
+                                            <input type="text" class="form-control" name="patogeno" id="idpatogeno"
+                                                placeholder="Nombre del patógeno">
+                                        </div>
+                                        <div class="form-group bmd-form-group unshow" id="sensible">
+                                            <input type="text" class="form-control" name="sensible" id="idsensible"
+                                                placeholder="Sensible" />
+                                        </div>
+                                        <div class="form-group bmd-form-group unshow" id="resistente">
+                                            <input type="text" class="form-control" name="resistente" id="idresistente"
+                                                placeholder="Resistente" />
+                                        </div>
+                                        <div class="form-group bmd-form-group unshow" id="parcial_sensible">
+                                            <input type="text" class="form-control" id="idparcial"
+                                                name="parcial_sensible" placeholder="Parcialmente Sensible" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group bmd-form-group">
+                                        <textarea name="comentario" class="form-control" rows="4"
+                                            placeholder="Ingrese su comentario"></textarea>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer justify-content-center">
+                                <button onclick="submit()" id="cultivo_resultado" class="btn btn-success"
+                                    data-dismiss="modal">Confirmar Registro</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    function submit() {
+                        var parameters = new FormData();
+                        parameters.append('action', $('input[name="action2"]').val());
+                        parameters.append('csrfmiddlewaretoken', $('input[name="csrf_token"]').val());
+                        parameters.append('id_cultivoFK', $('input[name="id_cultivoFK"]').val());
+                        parameters.append('id_evolucionFK', $('input[name="id_evolucionFK"]').val());
+                        parameters.append('medico', $('input[name="medico"]').val());
+                        parameters.append('resultado_probable', $('select[name="resultado_probable"]').val());
+                        parameters.append('patogeno', $('input[name="patogeno"]').val());
+                        parameters.append('sensible', $('input[name="sensible"]').val());
+                        parameters.append('resistente', $('input[name="resistente"]').val());
+                        parameters.append('parcial_sensible', $('input[name="parcial_sensible"]').val());
+                        parameters.append('comentario', $('textarea[name="comentario"]').val());
+                        $.ajax({
+                            url: "{% url 'RegistroResultCultivo' %}",
+                            type: 'POST',
+                            data: parameters,
+                            dataType: 'json',
+                            processData: false,
+                            contentType: false,
+                        }).done(function (data) {
+                            window.location.reload();
+                        }).fail(function (jqXHR, textStatus, errorThrown) {
+                            alert("No puede registrar resultados de un cultivo que no ah sido creado")
+                        })
+                    }
+                </script>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+    {% block javascripts %}
+    <script>
+        $('#patogeno').change(function () {
+            var patogeno = $(this).val()
+            document.getElementById('idpatogeno').value = "";
+            document.getElementById('idsensible').value = "";
+            document.getElementById('idresistente').value = "";
+            document.getElementById('idparcial').value = "";
+            if (patogeno == '2') {
+                $('#nombrepatogeno').removeClass('unshow');
+                $('#sensible').removeClass('unshow');
+                $('#resistente').removeClass('unshow');
+                $('#parcial_sensible').removeClass('unshow');
+            }
+            if (patogeno == '1') {
+                $('#nombrepatogeno').addClass('unshow');
+                $('#sensible').addClass('unshow');
+                $('#resistente').addClass('unshow');
+                $('#parcial_sensible').addClass('unshow');
+            }
+        })
+    </script>
+    <script>
+        function mostrar(id_cultivo, id_evolucion) {
+            document.getElementById('idcultivo').value = id_cultivo;
+            document.getElementById('idevolucion').value = id_evolucion;
+            $('#resultadoCultivo').modal("show")
+        }
+        $(document).ready(function () {
+            $('#tblresultcultivo').DataTable({
+                "language": {
+                    "sLengthMenu": "Mostrar _MENU_ registros",
+                    "sZeroRecords": "No se encontraron resultados",
+                    "sEmptyTable": "Ningún dato disponible en esta tabla",
+                    "sSearch": "Buscar:",
+                    "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast": "Último",
+                        "sNext": "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                },
+                paging: true,
+                filter: true,
+                info: false,
+                autoWidth: false,
+                responsive: true,
+                destroy: true,
+                ordering: false,
+            })
+        });
+    </script>
+    <script>
+        function cambiar_estado(id_resultCultivo, id_evolucion) {
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'ResultCultivo_anular' %}",
+                data: {
+                    "csrfmiddlewaretoken": "{{ csrf_token }}",
+                    "pk": id_resultCultivo,
+                },
+            }).done(function (data) {
+                window.location.href = '/evolucion/result_cultivo/' + id_evolucion;
+            })
+        }
+    </script>
+    {% endblock javascripts %}

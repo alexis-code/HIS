@@ -1,0 +1,36 @@
+{% extends 'hospitalapp/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-sm-8 col-sm-offset-2">
+        <form method="POST">
+            <input type="hidden" name="action" value="medicamento_edit">
+            {% csrf_token %}
+            <div class="row">
+                <div class="card" style="width: 50rem">
+                    <div class="card-header">
+                        <h6 style="text-align: center;">Datos Medicamento</h6>
+                    </div>
+                    <hr>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label class="bmd-label-floating">Nombre del Medicamento*</label>
+                                <input type="text" class="form-control" name="nombre" value="{{ object.nombre }}" />
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="bmd-label-floating">GR/ML/ETC*</label>
+                                <input type="text" class="form-control" name="medida" value="{{ object.medida }}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <input type="submit" class="btn btn-success" value="{{label_boton}}">
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

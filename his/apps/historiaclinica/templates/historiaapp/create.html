@@ -1,0 +1,328 @@
+{% extends 'hospitalapp/base.html' %}
+{% load static %}
+{% block title %}
+Historia Clínica - Crear
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-sm-8 col-sm-offset-2">
+            <form method="POST">
+                <input type="hidden" name="action" value="{{action}}">
+                <input type="hidden" name="id_medicoPK" value="{{user.id_medicoPK}}">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="card" style="width: 50rem">
+                        <div class="card-header">
+                            <h6 style="text-align: center;">Datos del Paciente</h6>
+                        </div>
+                        <hr>
+                        <div class="card-body">
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <label class="bmd-label-floating">Nro. de Documento*</label>
+                                    <input type="number" min="0" value="0" required class="form-control"
+                                        name="nro_documento"/>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label class="bmd-label-floating">Complemento*</label>
+                                    <select class="form-control" name="complementario_ci" required>
+                                        <option value="SC">SC</option>
+                                        <option value="BE">BE</option>
+                                        <option value="PD">PD</option>
+                                        <option value="TJ">TJ</option>
+                                        <option value="LP">LP</option>
+                                        <option value="CB">CB</option>
+                                        <option value="CH">CH</option>
+                                        <option value="PT">PT</option>
+                                        <option value="OR">OR</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label class="bmd-label-floating">Sexo*</label>
+                                    <select class="form-control" name="sexo">
+                                        <option value="M">Masculino</option>
+                                        <option value="F">Femenino</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label class="bmd-label-floating">Vacuna Covid*</label>
+                                    <select class="form-control" name="vacuna_covid" required>
+                                        <option value="Si">Si</option>
+                                        <option value="No">No</option>
+                                        <option value="Primera Dosis">1° Dosis</option>
+                                        <option value="Segunda Dosis">2° Dosis</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label class="bmd-label-floating">Nombre del Paciente*</label>
+                                    <input type="text" class="form-control" name="nombre" pattern="[A-Za-z \u00E0-\u00FC]{1,150}" required/>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label class="bmd-label-floating">Apellido Paterno*</label>
+                                    <input type="text" class="form-control" name="apellido_paterno" pattern="[A-Za-z \u00E0-\u00FC]{1,250}" required/>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label class="bmd-label-floating">Apellido Materno*</label>
+                                    <input type="text" class="form-control" name="apellido_materno" pattern="[A-Za-z \u00E0-\u00FC]{1,250}" required/>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label class="bmd-label-floating">Ocupación*</label>
+                                    <input type="text" class="form-control" name="ocupacion" pattern="[A-Za-z \u00E0-\u00FC]{1,150}" required/>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label class="bmd-label-floating">Estado Civil*</label>
+                                    <input type="text" name="estado_civil" class="form-control" pattern="[A-Za-z \u00E0-\u00FC]{1,100}" required/>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label class="bmd-label-floating">Residencia*</label>
+                                    <input type="text" class="form-control" name="residencia" pattern="[A-Za-z \u00E0-\u00FC , -]{1,100}" required />
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label class="bmd-label-floating">Procedencia*</label>
+                                    <input type="text" class="form-control" name="procedencia" pattern="[A-Za-z \u00E0-\u00FC , -]{1,100}" required />
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label class="bmd-label-floating">Domicilio*</label>
+                                    <input type="text" class="form-control" name="domicilio" required />
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label>Fecha Nacimiento*</label>
+                                    <input type="date" class="form-control datetimepicker" name="fecha_nacimiento" required/>
+                                </div>
+                                <!-- <div class="form-group col-md-4">
+                                    <label>Edad*</label>
+                                    <input type="number" class="form-control" min="0" pattern="[1-9]{1,15}" name="edad" required/>
+                                </div> -->
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label class="bmd-label-floating">Telefono*</label>
+                                    <input type="number" class="form-control" min="0" pattern="[1-9]{1,15}" name="telefono" required/>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label class="bmd-label-floating">Nombre de Referencia*</label>
+                                    <input type="text" class="form-control" name="nombre_referencia" pattern="[A-Za-z]{1,150}" required/>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label class="bmd-label-floating">Telefono de Referencia*</label>
+                                    <input type="number" class="form-control" min="0" pattern="[1-9]{1,15}" name="telefono_referencia" required/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="card" style="width: 50rem">
+                        <div class="card-header">
+                            <h6 style="text-align: center;">Datos de la Historia Clinica</h6>
+                        </div>
+                        <hr>
+                        <div class="card-body">
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label class="bmd-label-floating">Médico*</label>
+                                    <input type="text" class="form-control" id="medico"
+                                        value="{{ user.first_name }} {{ user.last_name }}" readonly />
+                                    <input type="hidden" name="id_medicoFK" value="{{ user.id_medicoPK }}" />
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label class="bmd-label-floating">Cod. Historia Clinica*</label>
+                                    <input type="number" class="form-control" name="cod_historiaclinica" required />
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label>Fecha de Ingreso al Hospital*</label>
+                                    <input type="datetime-local" class="form-control datetimepicker"
+                                        name="fecha_ingresohospital" id="fechaIngreso" required />
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Fecha de Ingreso a Area</label>
+                                    <input type="datetime-local" class="form-control datetimepicker"
+                                        name="fecha_ingresoarea" required/>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label>Nro. de Cama</label>
+                                    <input type="number" class="form-control datetimepicker" name="nro_cama" required />
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label class="bmd-label-floating">Grado Instrucción*</label>
+                                    <input type="text" class="form-control" name="grado_instruccion" required/>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="bmd-label-floating">Proviene de*</label>
+                                    <select name="proviene" id="inputState" class="form-control" required>
+                                        <option value="emergencia">Emergencia</option>
+                                        <option value="consulta">Consulta ext</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label class="bmd-label-floating">Antecedente*</label>
+                                    <textarea type="text" class="form-control" name="antecedente" rows="5"
+                                        required></textarea>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label class="bmd-label-floating">Historia de enfermedad actual*</label>
+                                    <textarea class="form-control" name="historia_enfermedad_actual" rows="5"
+                                        required></textarea>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label class="bmd-label-floating">Impresión Diagnostica*</label>
+                                    <textarea class="form-control" name="impresion_diagnostica" rows="5"
+                                        required></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="row">
+                    <div class="card" style="width: 50rem">
+                        <div class="card-header">
+                            <h6 style="text-align: center;">Datos del Exámen Físico</h6>
+                        </div>
+                        <hr>
+                        <div class="card-body">
+                            <div class="form-row">
+                                <div class="form-group col-md-2">
+                                    <label class="bmd-label-floating">TA</label>
+                                    <input type="text" class="form-control" name="tension_arterial" required/>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label class="bmd-label-floating">FC</label>
+                                    <input type="text" class="form-control" name="frecuencia_cardiaca" required/>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label class="bmd-label-floating">FR</label>
+                                    <input type="text" class="form-control" name="frecuencia_respiratoria" required/>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label class="bmd-label-floating">TEMP AX</label>
+                                    <input type="text" class="form-control" name="temp_ax" required/>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label class="bmd-label-floating">SAT</label>
+                                    <input type="text" class="form-control" name="sindrome_at" required/>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label class="bmd-label-floating">Peso</label>
+                                        <input type="text" class="form-control" name="peso" required/>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label class="bmd-label-floating">Piel y Mucosas</label>
+                                        <textarea type="text" class="form-control" name="piel_mucosa" rows="3" required></textarea>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label class="bmd-label-floating">Neurologico</label>
+                                        <textarea type="text" class="form-control" name="neurologico" rows="3" required></textarea>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label class="bmd-label-floating">Cardiopulmonar</label>
+                                        <textarea type="text" class="form-control" name="cardiopulmonar"
+                                            rows="3" required></textarea>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label class="bmd-label-floating">Abdomen</label>
+                                        <textarea type="text" class="form-control" name="abdomen" rows="3" required></textarea>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label class="bmd-label-floating">Genitourinario</label>
+                                        <textarea type="text" class="form-control" name="genitourinario"
+                                            rows="3" required></textarea>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label class="bmd-label-floating">Musculoesqueletico</label>
+                                        <textarea type="text" class="form-control" name="musculoesqueletico"
+                                            rows="3" required></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <input type="submit" class="btn btn-success" value="Registrar">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Mensaje</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row justify-content-center" id="errores">
+    
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{%  block javascripts %}
+<script src="{% static 'assets/jquery-ui-1.12.1.custom/jquery-ui.min.js' %}"></script>
+<script>
+    $(function () {
+        $('input[name="nro_documento"]').autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: window.location.pathname,
+                    type: 'POST',
+                    data: {
+                        'action': 'search_nro_ci',
+                        'csrfmiddlewaretoken': "{{csrf_token}}",
+                        'term': request.term,
+                    },
+                    dataType: 'json',
+                }).done(function (data) {
+                    response(data);
+                }).fail(function (data) {
+                });
+            },
+            delay: 500,
+            minLength: 1,
+            select: function (event, ui) {
+                $.ajax({
+                    url: "/historia/redirigir/evolucion/",
+                    type: 'POST',
+                    data: {
+                        'csrfmiddlewaretoken': "{{csrf_token}}",
+                        'nro_documento': ui.item.nro_documento,
+                    },
+                    dataType: 'json',
+                }).done(function (data) {
+                    window.location.href = "/evolucion/create/"+data.id_HC;
+                }).fail(function (data) {
+                    alert(data.error);
+                });
+            },
+        });
+    });
+</script>
+{% endblock javascripts %}

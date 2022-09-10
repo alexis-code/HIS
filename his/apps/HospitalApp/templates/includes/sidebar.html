@@ -1,0 +1,55 @@
+{% load static %}
+<div class="sidebar" data="blue">
+  <div class="sidebar-wrapper">
+    <div class="logo text-center">
+      <img src="{% static 'assets/img/logo-his.png' %}" alt="logo" width="100" height="100">
+    </div>
+
+    <ul class="nav">
+      {% if request.user.is_authenticated %}
+      
+      <li class="{% if 'historia' in request.path %} active {% endif %}">
+        <a href="{% url 'indexHistoriaC' %}">
+          <i class="material-icons">fact_check</i>
+          <p style="font-weight: bold; font-size: small;">Historias Clinicas</p>
+        </a>
+      </li>
+      <li class="{% if 'paciente' in request.path %} active {% endif %}">
+        <a href="{% url 'ListaPaciente' %}">
+          <i class="material-icons">people</i>
+          <p style="font-weight: bold; font-size: small;">Pacientes</p>
+        </a>
+      </li>
+      <li class="{% if 'medicamento' in request.path %} active {% endif %}">
+        <a href="{% url 'ListaMedicamento' %}">
+          <i class="material-icons">medical_services</i>
+          <p style="font-weight: bold; font-size: small;">Medicamentos</p>
+        </a>
+      </li>
+      <li class="{% if 'codigo' in request.path %} active {% endif %}">
+        <a href="{% url 'indexCodigoCie' %}">
+          <i class="material-icons">post_add</i>
+          <p style="font-weight: bold; font-size: small;">Códigos Cie-10</p>
+        </a>
+      </li>
+      <li class="{% if 'reporte' in request.path %} active {% endif %}">
+        <a href="{% url 'dashboard' %}">
+          <i class="material-icons">assignment</i>
+          <p style="font-weight: bold; font-size: small;">Reportes</p>
+        </a>
+      </li>
+      {% if user.is_staff %}
+      <li>
+        <a href="/admin/">
+          <i class="material-icons">admin_panel_settings</i>
+          <p style="font-weight: bold; font-size: small;">Administración</p>
+        </a>
+      </li>
+      {% endif %}
+      {% else %}
+      {% endif %}
+
+    </ul>
+
+  </div>
+</div>

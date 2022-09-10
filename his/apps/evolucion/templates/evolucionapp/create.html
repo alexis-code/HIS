@@ -1,0 +1,727 @@
+{% extends 'hospitalapp/base.html' %}
+{% load static %}
+{% block tittle %}
+Evolución|Crear
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <form method="POST">
+            <div class="card">
+                <div class="card-header card-header-success">
+                    <h4 class="card-title"><strong>Cod. HC:</strong>
+                        {{object.cod_historiaclinica}}</h4>
+                </div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="col">
+                            <p><strong>Paciente:</strong><br> {{ object.id_pacienteFK.nombre }}
+                                {{object.id_pacienteFK.apellido_paterno }}
+                                {{object.id_pacienteFK.apellido_materno }}</p>
+                        </div>
+                        <div class="col">
+                            <p><strong>Edad:</strong><br> {{object.id_pacienteFK.edad}} años</p>
+                        </div>
+                        <div class="col">
+                            <p><strong>Nro. Documento:</strong><br> {{object.id_pacienteFK.nro_documento}}</p>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <p><strong>Antecedentes:</strong><br /> {{ object.antecedente}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="action" value="evolucion_add">
+            <input type="hidden" name="id_historiaclinicaFK" value="{{object.id_historiaPK}}">
+            <input type="hidden" name="id_medicoPK" value="{{user.id_medicoPK}}">
+
+
+            <!--Datos de la Evolución-->
+            <div class="row">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 style="text-align: center;">Datos de la Evolución</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">Días en el Area*</label>
+                                <input type="number" class="form-control" name="dias_area" value="{{diasArea}}" readonly
+                                    required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">Nro. de Cama*</label>
+                                <input type="number" class="form-control" name="nro_cama" required />
+                            </div>
+
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label class="bmd-label-floating">Diagnóstico</label>
+                                <textarea class="form-control" name="diagnostico_evolucion" rows="5"
+                                    required></textarea>
+                            </div>
+                        </div>
+                        <div class="form-row">
+
+                            <div class="form-group col-md-6">
+                                <label class="bmd-label-floating">Análisis</label>
+                                <textarea class="form-control" name="analisis" rows="5" required> </textarea>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="bmd-label-floating">Plan</label>
+                                <textarea class="form-control" name="plan" rows="5" required> </textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--Datos del examen fisico-->
+            <div class="row">
+                <div class="card" style="width: 50rem;">
+                    <div class="card-header">
+                        <h3 style="text-align: center;">Datos del Exámen Físico</h3>
+                    </div>
+                    <hr>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">TA</label>
+                                <input type="text" class="form-control" name="tension_arterial" pattern="[/0-9]{1,15}"
+                                    required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">FC</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control"
+                                    name="frecuencia_cardiaca" pattern="[.0-9]{1,15}" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">FR</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control"
+                                    name="frecuencia_respiratoria" pattern="[.0-9]{1,15}" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">TEMP AX</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control" value="0.00"
+                                    name="temp_ax" pattern="[.0-9]{1,15}" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">SAT</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control"
+                                    name="sindrome_at" pattern="[.0-9]{1,15}" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">PaO<sub>2</sub></label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control" name="pao"
+                                    pattern="[.0-9]{1,15}" required />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">FiO<sub>2</sub></label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control" name="fio"
+                                    pattern="[.0-9]{1,15}" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">PAS</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control" name="pas"
+                                    pattern="[.0-9]{1,15}" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">PAD</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control" name="pad"
+                                    pattern="[.0-9]{1,15}" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">PAM</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control" name="pam"
+                                    pattern="[.0-9]{1,15}" readonly />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">AVM</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control" name="avm"
+                                    pattern="[.0-9]{1,15}" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">MODO</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control" name="modo"
+                                    pattern="[.0-9]{1,15}" required />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">Noradrenalina</label>
+                                <input type="text" class="form-control" name="noradrenalina" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">Atracurio</label>
+                                <input type="text" class="form-control" name="atracurio" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">VC</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control" name="vc"
+                                    pattern="[.0-9]{1,15}" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">PEEP</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control" name="peep"
+                                    pattern="[.0-9]{1,15}" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">Prono Días</label>
+                                <input type="text" class="form-control" name="prono_dias" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">PAO<sub>2</sub>/FIO<sub>2</sub></label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control"
+                                    name="pao_fio" pattern="[.0-9]{1,15}" readonly />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">PI</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control" name="pi"
+                                    pattern="[.0-9]{1,15}" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">Peso - Kg</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control" name="peso"
+                                    pattern="[.0-9]{1,15}" required />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label class="bmd-label-floating">Piel y Mucosas</label>
+                                <textarea type="text" class="form-control" name="piel_mucosa" rows="3"
+                                    required></textarea>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="bmd-label-floating">Neurologico</label>
+                                <textarea type="text" class="form-control" name="neurologico" rows="3"
+                                    required></textarea>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="bmd-label-floating">Cardiopulmonar</label>
+                                <textarea type="text" class="form-control" name="cardiopulmonar" rows="3"
+                                    required></textarea>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="bmd-label-floating">Abdomen</label>
+                                <textarea type="text" class="form-control" name="abdomen" rows="3" required></textarea>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="bmd-label-floating">Genitourinario</label>
+                                <textarea type="text" class="form-control" name="genitourinario" rows="3"
+                                    required></textarea>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="bmd-label-floating">Musculoesqueletico</label>
+                                <textarea type="text" class="form-control" name="musculoesqueletico" rows="3"
+                                    required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--Datos del Laboratorio-->
+            <div class="row">
+                <div class="card" style="width: 50rem">
+                    <div class="card-header">
+                        <h3 style="text-align: center;">Datos del Laboratorio</h3>
+                    </div>
+                    <hr>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">GB</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control" name="lab_gb"
+                                    pattern="[.0-9]{1,15}" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">HB</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control" name="lab_hb"
+                                    pattern="[.0-9]{1,15}" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">PH</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control" name="lab_ph"
+                                    pattern="[.0-9]{1,15}" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">GOT</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control"
+                                    name="lab_got" pattern="[.0-9]{1,15}" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">NEU</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control"
+                                    name="lab_neu" pattern="[.0-9]{1,15}" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">HTCO</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control"
+                                    name="lab_htco" pattern="[.0-9]{1,15}" required />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">PCO<sub>2</sub></label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control"
+                                    name="lab_pco" pattern="[.0-9]{1,15}" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">GPT</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control"
+                                    name="lab_gpt" pattern="[.0-9]{1,15}" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">LIN</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control"
+                                    name="lab_lin" pattern="[.0-9]{1,15}" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">CR</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control" name="lab_cr"
+                                    pattern="[.0-9]{1,15}" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">HCO<sub>3</sub></label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control"
+                                    name="lab_hco" pattern="[.0-9]{1,15}" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">PT</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control" name="lab_pt"
+                                    pattern="[.0-9]{1,15}" required />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">CAY</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control"
+                                    name="lab_cay" pattern="[.0-9]{1,15}" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">UREA</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control"
+                                    name="lab_urea" pattern="[.0-9]{1,15}" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">ALB</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control"
+                                    name="lab_alb" pattern="[.0-9]{1,15}" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">PO<sub>2</sub></label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control" name="lab_po"
+                                    pattern="[.0-9]{1,15}" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">PLQ</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control"
+                                    name="lab_plq" pattern="[.0-9]{1,15}" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">NA</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control" name="lab_na"
+                                    pattern="[.0-9]{1,15}" required />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">EB</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control" name="lab_eb"
+                                    pattern="[.0-9]{1,15}" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">CL</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control" name="lab_cl"
+                                    pattern="[.0-9]{1,15}" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">K</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control" name="lab_k"
+                                    pattern="[.0-9]{1,15}" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">LACT</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control"
+                                    name="lab_lact" pattern="[.0-9]{1,15}" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">DD</label>
+                                <input type="number" step="0.01" value="0.00" min="0" class="form-control" name="lab_dd"
+                                    pattern="[.0-9]{1,15}" required />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--Detalle del Cultivo-->
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+                    <div class="card">
+                        <h3 class="row justify-content-center"><strong>Solicitar Cultivos</strong></h3>
+                        <div class="table-responsive" style="box-shadow: 0 0 5px transparent; border-radius: 15px;">
+                            <table class="table table-hover" id="tblcultivo">
+                                <div class="col-md-10">
+                                    <div class="form-group bmd-form-group">
+                                        <input type="text" class="form-control" id="cultivo"
+                                            placeholder="Ingrese el cultivo a solicitar" />
+                                    </div>
+                                </div>
+                                <thead class="text-info">
+                                    <tr style="max-width: 100%;">
+                                        <th class="th-sm" scope="col">Nombre</th>
+                                        <th class="th-sm" scope="col">Fecha</th>
+                                        <th class="th-sm" scope="col">Estado</th>
+                                        <th class="th-sm" scope="col">Quitar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--Detalle del Tratamiento-->
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+                    <div class="card">
+                        <h3 class="row justify-content-center"><strong>Tratamiento Antibiótico</strong></h3>
+                        <div class="table-responsive" style="box-shadow: 0 0 5px transparent; border-radius: 15px;">
+                            <table class="table table-hover" id="tblmedicamento">
+                                <div class="col-md-10">
+                                    <div class="form-group bmd-form-group">
+                                        <input type="text" name="buscador" class="form-control" id="medicamento"
+                                            placeholder="Ingrese el medicamento a solicitar" />
+                                    </div>
+                                </div>
+                                <thead class="text-info text-center">
+                                    <tr style="max-width: 100%;">
+                                        <th class="th-sm" scope="col">Medicamento</th>
+                                        <th class="th-sm" scope="col">Cantidad</th>
+                                        <th class="th-sm" scope="col">Indicación</th>
+                                        <th class="th-sm" scope="col">Quitar</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-center">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <input type="submit" class="btn btn-success" value="{{label_button}}">
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+<script src="{% static 'assets/jquery-ui-1.12.1.custom/jquery-ui.min.js' %}"></script>
+
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('input[type=text]').forEach(node => node.addEventListener('keypress', e => {
+            if (e.keyCode == 13) {
+                e.preventDefault();
+            }
+        }))
+    });
+</script>
+<script>
+
+    var tblcultivo;
+    var tblmedicamento;
+    var cultivos_list = {
+        items: {
+            analisis: "",
+            plan: "",
+            cultivos: [],
+            tratamiento: [],
+        },
+        add: function (item) {
+            this.items.cultivos.push(item);
+            this.list();
+        },
+        list: function () {
+            tblcultivo = $('#tblcultivo').DataTable({
+                "language": {
+                    "sEmptyTable": "Ningún dato disponible en esta tabla",
+
+                },
+                paging: false,
+                filter: false,
+                info: false,
+                autoWidth: false,
+                responsive: true,
+                destroy: true,
+                ordering: false,
+                data: this.items.cultivos,
+                columns: [
+                    { "data": "nombre" },
+                    { "data": "fecha" },
+                    { "data": "estado" }
+                ],
+                columnDefs: [
+                    {
+                        targets: [1],
+                        class: "text-center",
+                        orderable: false,
+                        render: function (data, type, row) {
+                            return '<input type="date" class="form-control datetimepicker"name="fecha" required value="' + row.fecha + '"/>';
+                        }
+                    },
+                    {
+                        targets: [3],
+                        class: "text-center",
+                        orderable: false,
+                        render: function (data, type, row) {
+                            return '<a rel="remove" class="btn btn-danger btn-link btn-sm"><i class="material-icons">clear</i></a>';
+                        }
+                    },
+                ],
+            })
+        },
+    };
+    var medicamento_list = {
+        items: {
+            tratamiento: [],
+        },
+        add: function (item) {
+            this.items.tratamiento.push(item);
+            this.list();
+        },
+        list: function () {
+            tblmedicamento = $('#tblmedicamento').DataTable({
+                "language": {
+                    "sEmptyTable": "Ningún dato disponible en esta tabla",
+
+                },
+                paging: false,
+                filter: false,
+                info: false,
+                autoWidth: false,
+                responsive: true,
+                destroy: true,
+                ordering: false,
+                data: this.items.tratamiento,
+                columns: [
+                    { "data": "nombre" },
+                    { "data": "cant" },
+                    { "data": "indicacion" },
+                ],
+                columnDefs: [
+                    {
+                        targets: [1],
+                        class: 'text-center',
+                        orderable: false,
+                        render: function (data, type, row) {
+                            return '<input type="number" name="cant" class="form-control" min="0" required value="' + row.cant + '">';
+                        }
+                    },
+                    {
+                        targets: [2],
+                        class: 'text-center',
+                        orderable: false,
+                        render: function (data, type, row) {
+                            return '<input type="text" name="indicacion" class="form-control" required value="' + row.indicacion + '">';
+                        }
+                    },
+                    {
+                        targets: [3],
+                        class: "text-center",
+                        orderable: false,
+                        render: function (data, type, row) {
+                            return '<a rel="remove" class="btn btn-danger btn-link btn-sm"><i class="material-icons">clear</i></a>';
+                        }
+                    },
+                ],
+            })
+        },
+    };
+
+    $('#tblcultivo tbody')
+        .on('click', 'a[rel="remove"]', function () {
+            var tr = tblcultivo.cell($(this).closest('td', 'li')).index();
+            cultivos_list.items.cultivos.splice(tr.row, 1);
+            cultivos_list.list();
+        })
+        .on('change', 'input[name="fecha"]', function () {
+            var fecha = $(this).val();
+            var tr = tblcultivo.cell($(this).closest('td,li')).index();
+            cultivos_list.items.cultivos[tr.row].fecha = fecha;
+        });
+
+    $('#tblmedicamento tbody')
+        .on('click', 'a[rel="remove"]', function () {
+            var tr = tblmedicamento.cell($(this).closest('td', 'li')).index();
+            medicamento_list.items.tratamiento.splice(tr.row, 1);
+            medicamento_list.list();
+        })
+        .on('change', 'input[name="cant"]', function () {
+            var cant = $(this).val();
+            var tr = tblmedicamento.cell($(this).closest('td, li')).index();
+            medicamento_list.items.tratamiento[tr.row].cant = cant;
+        })
+        .on('change', 'input[name="indicacion"]', function () {
+            var indicacion = $(this).val();
+            var tr = tblmedicamento.cell($(this).closest('td,li')).index();
+            medicamento_list.items.tratamiento[tr.row].indicacion = indicacion;
+        });
+
+    var cultivo = document.getElementById('cultivo');
+    cultivo.addEventListener("keydown", function (e) {
+        let date = new Date();
+        console.log(date)
+        let day = date.getDate();
+        let month = date.getMonth() + 1;
+        console.log(month)
+        let year = date.getFullYear();
+        var fulldate = "";
+        if (day < 10) {
+            day = '0' + day;
+        }
+        if (month < 10) {
+            month = '0' + month;
+        }
+        fulldate = year + '-' + month + '-' + day;
+        if (cultivo.value != "") {
+            if (e.keyCode === 13) {
+                var item = {
+                    "nombre": "",
+                    "fecha": "",
+                    "estado": "",
+                };
+                item.nombre = cultivo.value;
+                item.fecha = fulldate;
+                item.estado = "En Curso";
+                cultivos_list.add(item);
+                cultivo.value = "";
+            }
+        }
+    });
+
+    $(function () {
+        $('input[name="buscador"]').autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: window.location.pathname,
+                    type: 'POST',
+                    data: {
+                        'action': 'search_medicamentos',
+                        'term': request.term,
+                    },
+                    dataType: 'json',
+                }).done(function (data) {
+                    console.log(data)
+                    response(data);
+                }).fail(function (data) {
+                    console.log('error');
+                });
+            },
+            delay: 500,
+            minLength: 1,
+            select: function (event, ui) {
+                event.preventDefault();
+                ui.item.cant = 1;
+                ui.item.indicacion = "";
+                medicamento_list.add(ui.item);
+                console.log(ui.item)
+                $(this).val('');
+            },
+        });
+    });
+    $('form').on('submit', function (e) {
+        e.preventDefault();
+        var parameters = new FormData();
+        parameters.append('action', $('input[name="action"]').val());
+
+        //parametros para la evolucion
+        parameters.append('id_historiaclinicaFK', $('input[name="id_historiaclinicaFK"]').val());
+        parameters.append('id_medicoPK', $('input[name="id_medicoPK"]').val());
+        parameters.append('dias_area', $('input[name="dias_area"]').val());
+        parameters.append('nro_cama', $('input[name="nro_cama"]').val());
+        parameters.append('diagnostico_evolucion', $('textarea[name="diagnostico_evolucion"]').val());
+        parameters.append('analisis', $('textarea[name="analisis"]').val());
+        parameters.append('plan', $('textarea[name="plan"]').val());
+
+        //parametros para el exámen físico
+        parameters.append('tension_arterial', $('input[name="tension_arterial"]').val());
+        parameters.append('frecuencia_cardiaca', $('input[name="frecuencia_cardiaca"]').val());
+        parameters.append('frecuencia_respiratoria', $('input[name="frecuencia_respiratoria"]').val());
+        parameters.append('temp_ax', $('input[name="temp_ax"]').val());
+        parameters.append('sindrome_at', $('input[name="sindrome_at"]').val());
+        parameters.append('pao', $('input[name="pao"]').val());
+        parameters.append('fio', $('input[name="fio"]').val());
+        parameters.append('pas', $('input[name="pas"]').val());
+        parameters.append('pad', $('input[name="pad"]').val());
+        parameters.append('pam', $('input[name="pam"]').val());
+        parameters.append('avm', $('input[name="avm"]').val());
+        parameters.append('modo', $('input[name="modo"]').val());
+        parameters.append('noradrenalina', $('input[name="noradrenalina"]').val());
+        parameters.append('atracurio', $('input[name="atracurio"]').val());
+        parameters.append('vc', $('input[name="vc"]').val());
+        parameters.append('peep', $('input[name="peep"]').val());
+        parameters.append('prono_dias', $('input[name="prono_dias"]').val());
+        parameters.append('pi', $('input[name="pi"]').val());
+        parameters.append('peso', $('input[name="peso"]').val());
+        parameters.append('piel_mucosa', $('textarea[name="piel_mucosa"]').val());
+        parameters.append('neurologico', $('textarea[name="neurologico"]').val());
+        parameters.append('cardiopulmonar', $('textarea[name="cardiopulmonar"]').val());
+        parameters.append('abdomen', $('textarea[name="abdomen"]').val());
+        parameters.append('genitourinario', $('textarea[name="genitourinario"]').val());
+        parameters.append('musculoesqueletico', $('textarea[name="musculoesqueletico"]').val());
+
+        //parametros para el laboratorio
+        parameters.append('lab_gb', $('input[name="lab_gb"]').val());
+        parameters.append('lab_hb', $('input[name="lab_hb"]').val());
+        parameters.append('lab_ph', $('input[name="lab_ph"]').val());
+        parameters.append('lab_got', $('input[name="lab_got"]').val());
+        parameters.append('lab_neu', $('input[name="lab_neu"]').val());
+        parameters.append('lab_htco', $('input[name="lab_htco"]').val());
+        parameters.append('lab_pco', $('input[name="lab_pco"]').val());
+        parameters.append('lab_gpt', $('input[name="lab_gpt"]').val());
+        parameters.append('lab_lin', $('input[name="lab_lin"]').val());
+        parameters.append('lab_cr', $('input[name="lab_cr"]').val());
+        parameters.append('lab_hco', $('input[name="lab_hco"]').val());
+        parameters.append('lab_pt', $('input[name="lab_pt"]').val());
+        parameters.append('lab_cay', $('input[name="lab_cay"]').val());
+        parameters.append('lab_urea', $('input[name="lab_urea"]').val());
+        parameters.append('lab_alb', $('input[name="lab_alb"]').val());
+        parameters.append('lab_po', $('input[name="lab_po"]').val());
+        parameters.append('lab_plq', $('input[name="lab_plq"]').val());
+        parameters.append('lab_na', $('input[name="lab_na"]').val());
+        parameters.append('lab_eb', $('input[name="lab_eb"]').val());
+        parameters.append('lab_cl', $('input[name="lab_cl"]').val());
+        parameters.append('lab_k', $('input[name="lab_k"]').val());
+        parameters.append('lab_lact', $('input[name="lab_lact"]').val());
+        parameters.append('lab_dd', $('input[name="lab_dd"]').val());
+
+        parameters.append('cultivos_list', JSON.stringify(cultivos_list.items));
+        parameters.append('medicamento_list', JSON.stringify(medicamento_list.items));
+        $.ajax({
+            url: window.location.pathname,
+            type: 'POST',
+            data: parameters,
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+        }).done(function (data) {
+            window.location.href = '/evolucion/index/' + data.id
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+        }).always(function (data) {
+
+        });
+    })
+</script>
+{% endblock javascripts %}

@@ -1,0 +1,119 @@
+{% extends 'hospitalapp/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+
+    <div class="row justify-content-center">
+        <div class="col-sm-12 col-sm-offset-2">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        {% if messages %}
+                        <div class="row">
+                            <div class="col">
+                                {% for message in messages %}
+                                {% if message.tags == "error" %}
+                                <div class="alert alert-danger fade show" role="alert">
+                                    {% else %}
+                                    <div class="alert alert-success fade show" role="alert">
+                                        {% endif %}
+                                        <strong>{{message}}</strong>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <i class="tim-icons icon-simple-remove"></i>
+                                        </button>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+                            <h3 class="row justify-content-center"><strong>Listado de Epicrisis</strong></h3>
+                            <div class="table-responsive" style="box-shadow: 0 0 5px transparent; border-radius: 15px;">
+                                <table class="table table-hover" id="tblepicrisis">
+                                    <!-- |<a href="/epicrisis/index/activo/{{id}}" class="badge badge-success">Activos</a>|
+                            <a href="/epicrisis/index/anulados/{{id}}" class="badge badge-success">Anulados</a>|
+                            <a href="/epicrisis/index/{{id}}" class="badge badge-success">Todos</a>| -->
+                                    <thead class="text-info">
+                                        <tr>
+                                            <th class="th-sm" scope="col">Cod. HC</th>
+                                            <th class="th-sm" scope="col">Fecha</th>
+                                            <th class="th-sm" scope="col">Médico</th>
+                                            <th class="th-sm" scope="col">Nro. Documento</th>
+                                            <th class="th-sm" scope="col">Nombre Completo</th>
+                                            <th class="th-sm" scope="col">Estado</th>
+                                            <th class="th-sm" scope="col">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for epicrisis in object_list %}
+                                        <tr>
+                                            <td>{{epicrisis.id_evolucionFK.id_historiaclinicaFK.cod_historiaclinica}}
+                                            </td>
+                                            <td>{{epicrisis.fecha|date:"d-m-Y"}}</td>
+                                            <td>{{epicrisis.id_medicoFK.first_name}} {{epicrisis.id_medicoFK.last_name}}
+                                            </td>
+                                            <td>{{epicrisis.id_evolucionFK.id_historiaclinicaFK.id_pacienteFK.nro_documento}}
+                                            </td>
+                                            <td>{{epicrisis.id_evolucionFK.id_historiaclinicaFK.id_pacienteFK.nombre}}
+                                                {{epicrisis.id_evolucionFK.id_historiaclinicaFK.id_pacienteFK.apellido_paterno}}
+                                                {{epicrisis.id_evolucionFK.id_historiaclinicaFK.id_pacienteFK.apellido_materno}}
+                                            </td>
+                                            <td>{{epicrisis.estado}}</td>
+                                            <td>
+                                                <a href="/epicrisis/detalle/{{epicrisis.id_epicrisisPK}}" rel="tooltip"
+                                                    data-placement="bottom" title="Generar Detalle"><i
+                                                        class="material-icons"
+                                                        style="font-size: 20px;color: darkcyan;">receipt_long</i></a>
+                                                <a href="/epicrisis/update/{{epicrisis.id_epicrisisPK}}" rel="tooltip"
+                                                    data-placement="bottom" title="Editar"><i class="material-icons"
+                                                        style="font-size: 20px;color: darkcyan;">edit</i></a>
+                                                <a href="javascript:cambiar_estado({{ epicrisis.id_epicrisisPK }})"
+                                                    rel="tooltip" data-placement="bottom" title="Cambiar Estado"><i
+                                                        class="material-icons"
+                                                        style="font-size: 20px;color: darkcyan;">autorenew</i></a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}
+
+    {% block javascripts %}
+    <script>
+        var tblpaciente = $('#tblepicrisis').DataTable({
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            paging: true,
+            filter: true,
+            info: false,
+            autoWidth: false,
+            responsive: true,
+            destroy: true,
+            ordering: false,
+        })
+    </script>
+    <script>
+        function cambiar_estado(id) {
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'anular_epicrisis' %}",
+                data: {
+                    "csrfmiddlewaretoken": "{{ csrf_token }}",
+                    "pk": id,
+                },
+                success: function (response) {
+                    location.reload();
+                }
+            });
+        }
+    </script>
+    {% endblock javascripts %}

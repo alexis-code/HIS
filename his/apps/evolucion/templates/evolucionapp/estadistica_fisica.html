@@ -1,0 +1,156 @@
+{% extends 'hospitalapp/base.html' %}
+{% load static %}
+{% block stylesheets %}
+<script src="https://code.highcharts.com/highcharts.src.js"></script>
+{% endblock stylesheets %}
+{% block content %}
+<div class="content">
+    <div class="row">
+        <div class="card">
+            {% if messages %}
+    <div class="row">
+        <div class="col">
+            {% for message in messages %}
+                {% if message.tags == "error" %}
+                <div class="alert alert-danger fade show" role="alert">
+                {% else %}
+                <div class="alert alert-success fade show" role="alert">
+                {% endif %}
+                <strong>{{message}}</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <i class="tim-icons icon-simple-remove"></i>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+            <div class="card-header">
+                <div class="row">
+                    <h4>Control de Estadistica de Examenes Físicos</h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <h6>Seleccione el rango de fecha:</h6>
+                </div>
+                <form action="/evolucion/estadistica/examenfisico/generar/" method="POST">
+                    <div class="row justify-content-center">
+                        <input type="hidden" name="pk" value="{{id_historia}}" />
+                        <div class="col-sm-4">
+                            <input type="date" class="form-control datetimepicker" name="fecha_desde" id="fecha_inicio"
+                                value="{{fechadesde}}" required>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="date" class="form-control datetimepicker" name="fecha_hasta" id="fecha_fin"
+                                value="{{fechahasta}}" required>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <input type="submit" class="btn btn-success btn-sm" value="Generar">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="card card-chart">
+            <div class="card-body">
+                <canva class="highcharts-figure">
+                    <div id="container"></div>
+                </canva>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    let arreglo = {{ fecha| safe}}
+    Highcharts.chart('container', {
+
+        title: {
+            text: 'Estadística de examen físico'
+        },
+
+        subtitle: {
+            text: 'Hospital Japonés'
+        },
+        xAxis: {
+            categories: arreglo
+        },
+
+        yAxis: {
+            title: {
+                text: 'Indicadores en %, Peso en Kg.'
+            }
+        },
+
+        series: [{
+            name: 'FC',
+            data: {{ datos_fc| safe}}
+        }, {
+            name: 'FR',
+            data: {{ datos_fr| safe}}
+        }, {
+            name: 'TEMPAX',
+            data: {{ datos_tempax| safe}}
+        }, {
+            name: 'PAO',
+            data: {{ datos_pao| safe}}
+        }, {
+            name: 'FIO',
+            data: {{ datos_fio| safe}}
+        }, {
+            name: 'PAOFIO',
+            data: {{ datos_paofio| safe}}
+        }, {
+            name: 'PAS',
+            data: {{ datos_pas| safe}}
+        }, {
+            name: 'PAD',
+            data: {{ datos_pad| safe}}
+        }, {
+            name: 'PAM',
+            data: {{ datos_pam| safe}}
+        }, {
+            name: 'AVM',
+            data: {{ datos_avm| safe}}
+        }, {
+            name: 'MODO',
+            data: {{ datos_modo| safe}}
+        }, {
+            name: 'VC',
+            data: {{ datos_vc| safe}}
+        }, {
+            name: 'PEEP',
+            data: {{ datos_peep| safe}}
+        }, {
+            name: 'PI',
+            data: {{ datos_pi| safe}}
+
+        }, {
+            name: 'PESO',
+            data: {{ datos_peso| safe}}
+        }],
+
+        responsive: {
+        rules: [{
+            condition: {
+                maxWidth: 500
+            },
+            chartOptions: {
+                legend: {
+                    layout: 'horizontal',
+                    align: 'center',
+                    verticalAlign: 'bottom'
+                }
+            }
+        }]
+    }
+    
+    });
+</script>
+{% endblock javascripts %}

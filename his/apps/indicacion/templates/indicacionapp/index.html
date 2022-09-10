@@ -1,0 +1,132 @@
+{% extends 'hospitalapp/base.html' %}
+{% load static %}
+{% block title %}
+Indicación - Lista
+{% endblock %}
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-sm-12 col-sm-offset-2">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    {% if messages %}
+                    <div class="row">
+                        <div class="col">
+                            {% for message in messages %}
+                            {% if message.tags == "error" %}
+                            <div class="alert alert-danger fade show" role="alert">
+                                {% else %}
+                                <div class="alert alert-success fade show" role="alert">
+                                    {% endif %}
+                                    <strong>{{message}}</strong>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <i class="tim-icons icon-simple-remove"></i>
+                                    </button>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                        <h3 class="row justify-content-center"><strong>Listado de Indicaciones</strong></h3>
+                        <div class="table-responsive" style="box-shadow: 0 0 5px transparent; border-radius: 15px;">
+                            <div class="row">
+                                <div class="col-sm">
+                                    <!-- /*sdf*/ |<a href="/evolucion/index/evoluciones/Activo/{{id}}"
+                                    class="badge badge-success">Activos</a>|
+                                <a href="/evolucion/index/evoluciones/Anulados/{{id}}"
+                                    class="badge badge-success">Anulados</a>|
+                                <a href="/evolucion/index/evoluciones/{{id}}" class="badge badge-success">Todos</a>| -->
+                                </div>
+                            </div>
+                            <table class="table table-hover" id="tblindicacion">
+                                <thead class="text-info">
+                                    <tr>
+                                        <th class="th-sm" scope="col">Fecha de Evolución</th>
+                                        <th class="th-sm" scope="col">Nro. Cama</th>
+                                        <th class="th-sm" scope="col">Médico</th>
+                                        <th class="th-sm" scope="col">Modifico</th>
+                                        <th class="th-sm" scope="col">Fecha de Indicación</th>
+                                        <th class="th-sm" scope="col">Estado</th>
+                                        <th class="th-sm" scope="col">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for indicacion in object_list %}
+                                    <tr>
+                                        <td>{{indicacion.id_evolucionFK.fecha_hora|date:"d-m-Y H:i a"}}</td>
+                                        <td>{{indicacion.id_evolucionFK.nro_cama}}</td>
+                                        <td>{{indicacion.id_medicoFK.first_name}} {{indicacion.id_medicoFK.last_name}}
+                                        </td>
+                                        <td>{{indicacion.medico_updated}}</td>
+                                        <td>{{indicacion.fecha_indicacion|date:"d-m-Y"}}</td>
+                                        <td>{{indicacion.estado}}</td>
+                                        <td>
+                                            <a href="/indicacion/detalle/{{indicacion.id_indicacionPK}}" rel="tooltip"
+                                                data-placement="bottom" title="Generar Detalle"><i
+                                                    class="material-icons"
+                                                    style="font-size: 20px; color: darkcyan;">receipt_long</i></a>
+                                            <a href="/indicacion/update/{{indicacion.id_indicacionPK}}" rel="tooltip"
+                                                data-placement="bottom" title="Editar"><i class="material-icons"
+                                                    style="font-size: 20px; color: darkcyan;">edit</i></a>
+                                            <a href="javascript:cambiar_estado({{ indicacion.id_indicacionPK }})"
+                                                rel="tooltip" data-placement="bottom" title="Cambiar Estado"><i
+                                                    class="material-icons"
+                                                    style="font-size: 20px;color: darkcyan;">autorenew</i></a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+    {% block javascripts %}
+    <script>
+        function cambiar_estado(id_evolucion) {
+            $.confirm({
+                title: 'Cambiar Estado!',
+                content: 'Desea confirmar?',
+                buttons: {
+                    confirmar: {
+                        btnClass: 'btn-success',
+                        action: function () {
+                            $.ajax({
+                                type: 'POST',
+                                url: "{% url 'change_statusIndicacion' %}",
+                                data: {
+                                    "csrfmiddlewaretoken": "{{ csrf_token }}",
+                                    "pk": id_evolucion,
+                                },
+                            }).done(function (data) {
+                                location.href = "/indicacion/index/" + data
+                            })
+                        }
+                    },
+                    cancelar: {
+                        btnClass: 'btn-danger',
+                    },
+                }
+            });
+
+        }
+    </script>
+    <script>
+        var tblpaciente = $('#tblindicacion').DataTable({
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            paging: true,
+            filter: true,
+            info: false,
+            autoWidth: false,
+            responsive: true,
+            destroy: true,
+            ordering: false,
+        })
+    </script>
+    {% endblock javascripts %}

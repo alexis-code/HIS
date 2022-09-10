@@ -1,0 +1,227 @@
+{% extends 'hospitalapp/base.html' %}
+{% load static %}
+{% load auth_extras %}
+{% block tittle %}
+<title>Evolución - Hospital Japonés</title>
+{% endblock %}
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-sm-12 col-sm-offset-2">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    {% if messages %}
+                    <div class="row">
+                        <div class="col">
+                            {% for message in messages %}
+                            {% if message.tags == "error" %}
+                            <div class="alert alert-danger fade show" role="alert">
+                                {% else %}
+                                <div class="alert alert-success fade show" role="alert">
+                                    {% endif %}
+                                    <strong>{{message}}</strong>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <i class="tim-icons icon-simple-remove"></i>
+                                    </button>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                        <div class="col-stats">
+                            <a class="btn btn-success btn-sm btn-round" rel="tooltip" data-placement="left"
+                                data-toggle="modal" data-target="#estadistica"
+                                title="Estadistica de Laboratorio"><i class="material-icons"
+                                    style="font-size: 20px;color: white;">show_chart</i></a>
+                            <a class="btn btn-success btn-sm btn-round" rel="tooltip" data-placement="left"
+                                data-toggle="modal" data-target="#examenfisico"
+                                title="Estadistica de Examenes Físicos"><i class="material-icons"
+                                    style="font-size: 20px;color: white;">bar_chart</i></a>
+                        </div>
+                        <h3 class="row justify-content-center"><strong>Listado de Evoluciones</strong></h3>
+                        <div class="table-responsive" style="box-shadow: 0 0 5px transparent; border-radius: 15px;">
+                            <div class="row">
+                                <div class="col-sm">
+                                    |<a href="/evolucion/index/evoluciones/Activo/{{id}}"
+                                        class="badge badge-success">Activos</a>|
+                                    <a href="/evolucion/index/evoluciones/Anulados/{{id}}"
+                                        class="badge badge-success">Anulados</a>|
+                                    <a href="/evolucion/index/evoluciones/{{id}}" class="badge badge-success">Todos</a>|
+                                </div>
+                            </div>
+                            <table class="table table-hover" id="tblevoluciones">
+                                <thead class="text-info">
+                                    <tr>
+                                        <th class="th-sm" scope="col">Fecha de Evolución</th>
+                                        <th class="th-sm" scope="col">Paciente</th>
+                                        <th class="th-sm" scope="col">Dr(a)</th>
+                                        <th class="th-sm" scope="col">Estado</th>
+                                        <th class="th-sm" scope="col">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for evolucion in object_list %}
+                                    <tr>
+                                        <td>{{evolucion.fecha_hora|date:"d-m-Y H:i a"}}</td>
+                                        <td>{{evolucion.id_historiaclinicaFK.id_pacienteFK.nombre }}
+                                            {{evolucion.id_historiaclinicaFK.id_pacienteFK.apellido_paterno}}
+                                            {{evolucion.id_historiaclinicaFK.id_pacienteFK.apellido_materno}}</td>
+                                        <td>{{evolucion.id_medicoFK.first_name }} {{evolucion.id_medicoFK.last_name}}
+                                        </td>
+                                        <td>{{evolucion.estado}}</td>
+                                        <td>
+                                            {% if request.user|has_group:"reportes" %}
+                                            <a href="/evolucion/detalle/{{evolucion.id_evolucionPK}}" rel="tooltip"
+                                                data-placement="bottom" title="Generar Detalle"><i
+                                                    class="material-icons"
+                                                    style="font-size: 20px; color: darkcyan;">receipt_long</i></a>
+                                            <a href="/indicacion/index/indicacion/{{evolucion.id_evolucionPK}}"
+                                                rel="tooltip" data-placement="bottom" title="Reporte Indicacion"><i
+                                                    class="material-icons"
+                                                    style="font-size: 20px; color: darkcyan;">list</i></a>
+                                            <a href="/evolucion/result_cultivo/{{ evolucion.id_evolucionPK }}"
+                                                rel="tooltip" data-placement="bottom" title="Reporte de Cultivos"><i
+                                                    class="material-icons"
+                                                    style="font-size: 20px;color: darkcyan;">fact_check</i></a>
+                                            {% else %}
+                                            <a href="/evolucion/detalle/{{evolucion.id_evolucionPK}}" rel="tooltip"
+                                                data-placement="bottom" title="Generar Detalle"><i
+                                                    class="material-icons"
+                                                    style="font-size: 20px; color: darkcyan;">receipt_long</i></a>
+                                            <a href="/indicacion/index/indicacion/{{evolucion.id_evolucionPK}}"
+                                                rel="tooltip" data-placement="bottom" title="Reporte Indicacion"><i
+                                                    class="material-icons"
+                                                    style="font-size: 20px; color: darkcyan;">list</i></a>
+                                            <a href="/evolucion/result_cultivo/{{ evolucion.id_evolucionPK }}"
+                                                rel="tooltip" data-placement="bottom" title="Reporte de Cultivos"><i
+                                                    class="material-icons"
+                                                    style="font-size: 20px;color: darkcyan;">fact_check</i></a>
+                                            <a href="javascript:cambiar_estado({{ evolucion.id_evolucionPK }})"
+                                                rel="tooltip" data-placement="bottom" title="Cambiar Estado"><i
+                                                    class="material-icons"
+                                                    style="font-size: 20px;color: darkcyan;">autorenew</i></a>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal fade" id="estadistica" tabindex="-1" role="">
+                            <div class="modal-dialog modal-login" role="document">
+                                <div class="modal-content">
+                                    <div class="card card-signup card-plain">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title card-title">Elija la fecha</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <i class="material-icons">clear</i>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="/evolucion/estadistica/generar/" method="POST">
+                                                <div class="row justify-content-center">
+                                                    <input type="hidden" name="pk" value="{{id_historia}}" />
+                                                    <div class="col-sm">
+                                                        <input type="date" class="form-control datetimepicker"
+                                                            name="fecha_desde" id="fecha_inicio" required>
+                                                    </div>
+                                                    <div class="col-sm">
+                                                        <input type="date" class="form-control datetimepicker"
+                                                            name="fecha_hasta" id="fecha_fin" required>
+                                                    </div>
+                                                </div>
+                                                <div class="row justify-content-center">
+                                                    <input type="submit" class="btn btn-success btn-sm" value="Generar">
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="examenfisico" tabindex="-1" role="">
+                            <div class="modal-dialog modal-login" role="document">
+                                <div class="modal-content">
+                                    <div class="card card-signup card-plain">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title card-title">Elija la fecha</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <i class="material-icons">clear</i>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="/evolucion/estadistica/examenfisico/generar/" method="POST">
+                                                <div class="row justify-content-center">
+                                                    <input type="hidden" name="pk" value="{{id_historia}}" />
+                                                    <div class="col-sm">
+                                                        <input type="date" class="form-control datetimepicker"
+                                                            name="fecha_desde" id="fecha_inicio" required>
+                                                    </div>
+                                                    <div class="col-sm">
+                                                        <input type="date" class="form-control datetimepicker"
+                                                            name="fecha_hasta" id="fecha_fin" required>
+                                                    </div>
+                                                </div>
+                                                <div class="row justify-content-center">
+                                                    <input type="submit" class="btn btn-success btn-sm" value="Generar">
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+    {% block javascripts %}
+    <script>
+        function cambiar_estado(id_evolucion) {
+            $.confirm({
+                title: 'Cambiar Estado!',
+                content: 'Desea confirmar?',
+                buttons: {
+                    confirmar: {
+                        btnClass: 'btn-success',
+                        action: function () {
+                            $.ajax({
+                                type: 'POST',
+                                url: "{% url 'EvolucionChangeSatus' %}",
+                                data: {
+                                    "csrfmiddlewaretoken": "{{ csrf_token }}",
+                                    "pk": id_evolucion,
+                                },
+                            }).done(function (data) {
+                                console.log(data);
+                                location.href = "/evolucion/index/evoluciones/Activo/" + data
+                            })
+                        }
+                    },
+                    cancelar: {
+                        btnClass: 'btn-danger',
+                    },
+                }
+            });
+
+        }
+    </script>
+    <script>
+        var tblpaciente = $('#tblevoluciones').DataTable({
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            paging: true,
+            filter: true,
+            info: false,
+            autoWidth: false,
+            responsive: true,
+            destroy: true,
+            ordering: false,
+        })
+    </script>
+
+    {% endblock javascripts %}

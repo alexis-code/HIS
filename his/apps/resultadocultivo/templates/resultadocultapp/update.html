@@ -1,0 +1,85 @@
+{% extends 'hospitalapp/base.html' %}
+{% load static %}
+{% block title %}
+
+Resultado Cultivo|Editar
+
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-sm-offset-2">
+            <div class="row justify-content-center">
+                <div class="card" style="width: 50rem">
+                    <div class="card-header">
+                        <h3 class="row justify-content-center"><strong>Editar Resultados</strong></h3>
+                    </div>
+                    <div class="card-body">
+                        <form class="form" method="POST">
+                            <input type="hidden" name="action" value="edit_resultCultivo">
+                            <input type="hidden" name="id_evolucionFK" value="{{object.id_evolucionFK_id}}">
+                            <input type="hidden" name="medico" value="{{user.first_name}} {{user.last_name}}">
+                            <input type="hidden" name="medico_updatedC" value="{{user.first_name}} {{user.last_name}}">
+                                <div class="form-group bmd-form-group text-center">
+                                    <h3 class="modal-title card-title" id="nombrecultivo"></h3>
+                                </div>
+                                <div class="form-group bmd-form-group">
+                                        <select class="form-control" name="resultado_probable" id="patogeno">
+                                            <option value="1" {%if object.resultado_probable == 'No se aislo ningun patogeno'%}selected{%endif%}>No se aislo ningun patogeno</option>
+                                            <option value="2" {%if object.resultado_probable == 'Se asilo patogeno'%}selected{%endif%}>Se asilo patogeno</option>
+                                        </select>
+                                </div>
+                                <div class="form-group bmd-form-group unshow" id="nombrepatogeno">
+                                        <input type="text" class="form-control" name="patogeno" id="idpatogeno"
+                                            placeholder="Nombre del patógeno" value="{{object.patogeno}}">
+                                </div>
+                                <div class="form-group bmd-form-group unshow" id="sensible">
+                                        <input type="text" class="form-control" name="sensible" id="idsensible"
+                                            placeholder="Sensible" value="{{object.sensible}}" />
+                                </div>
+                                <div class="form-group bmd-form-group unshow" id="resistente">
+                                        <input type="text" class="form-control" name="resistente" id="idresistente"
+                                            placeholder="Resistente" value="{{object.resistente}}" />
+                                </div>
+                                <div class="form-group bmd-form-group unshow" id="parcial_sensible">
+                                        <input type="text" class="form-control" id="idparcial" name="parcial_sensible"
+                                            placeholder="Parcialmente Sensible" value="{{object.parcial_sensible}}" />
+                                </div>
+                            <div class="form-group bmd-form-group">
+                                    <textarea name="comentario" class="form-control" rows="4"
+                                        placeholder="Ingrese su comentario">{{object.comentario}}</textarea>
+                            </div>
+                            <div class="row justify-content-center">
+                                <input type="submit" class="btn btn-success" value="{{label_boton}}">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    $('#patogeno').change(function () {
+        var patogeno = $(this).val()
+        document.getElementById('idpatogeno').value = "";
+        document.getElementById('idsensible').value = "";
+        document.getElementById('idresistente').value = "";
+        document.getElementById('idparcial').value = "";
+        if (patogeno == '2') {
+            $('#nombrepatogeno').removeClass('unshow');
+            $('#sensible').removeClass('unshow');
+            $('#resistente').removeClass('unshow');
+            $('#parcial_sensible').removeClass('unshow');
+        }
+        if (patogeno == '1') {
+            $('#nombrepatogeno').addClass('unshow');
+            $('#sensible').addClass('unshow');
+            $('#resistente').addClass('unshow');
+            $('#parcial_sensible').addClass('unshow');
+        }
+    })
+</script>
+{% endblock %}

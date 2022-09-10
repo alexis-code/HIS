@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evolución|Detalle</title>
+    <link rel="icon" type="image/png" href="{% static 'assets/img/logo-his.png' %}">
+    <!-- Material Kit CSS -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,600,700,800" rel="stylesheet" />
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+    <!-- Nucleo Icons -->
+    <link href="{% static 'assets/css/nucleo-icons.css' %}" rel="stylesheet" />
+    <!-- CSS Files -->
+    <link href="{% static 'assets/css/black-dashboard.css' %}" rel="stylesheet" />
+    <link href="{% static 'assets/datatable/datatables.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'assets/jquery-ui-1.12.1.custom/jquery.css' %}" rel="stylesheet" />
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link href="{% static 'assets/css/micss.css' %}" rel="stylesheet" />
+
+    <style>
+        html,
+        body {
+            width: auto;
+            background-color: white;
+        }
+
+        #customers {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #customers td,
+        #customers th {
+            border: 1px solid #ddd;
+        }
+
+        #customers th {
+            padding-top: 2px;
+            padding-bottom: 2px;
+            padding: 4px;
+            text-align: center;
+            background-color: #009197;
+            color: black;
+        }
+    </style>
+</head>
+
+<body class="white-content">
+    <div class="card">
+        <dvi class="card-header">
+            <div class="row justify-content-center">
+                <div class="col-sm text-center">
+                    <img src="{% static 'assets/img/logo-gobernacion.png' %}" alt="logo" width="150px;" />
+                </div>
+                <div class="col-sm text-center">
+                    <h2 class="mt-2">Evolución Clinica</h2>
+                </div>
+                <div class="col-sm text-center">
+                    <a href="/evolucion/index/{{evolucion.id_historiaclinicaFK_id}}">
+                        <img src="{% static 'assets/img/logo-his.png' %}" alt="logo" width="80px;" />
+                    </a>
+                </div>
+            </div>
+        </dvi>
+        <div class="card-body">
+            <div class="row text-center">
+                <div class="col-sm">
+                    <p><strong style="font-weight: bold;">Nombre y Apellido:</strong><br>
+                        {{evolucion.id_historiaclinicaFK.id_pacienteFK.nombre }}
+                        {{evolucion.id_historiaclinicaFK.id_pacienteFK.apellido_paterno }}
+                        {{evolucion.id_historiaclinicaFK.id_pacienteFK.apellido_materno }}</p>
+                </div>
+                <div class="col-sm">
+                    <p><strong style="font-weight: bold;">Cama:</strong><br>{{ evolucion.nro_cama }}</p>
+                </div>
+                <div class="col-sm">
+                    <p><strong style="font-weight: bold;">Fecha y Hora:</strong><br>{{ evolucion.fecha_hora|date:"d-m-Y H:i a" }}</p>
+                </div>
+            </div>
+            <div class="row text-center">
+                <div class="col-sm">
+                    <p><strong style="font-weight: bold;">Edad:</strong><br>
+                        {{evolucion.id_historiaclinicaFK.id_pacienteFK.edad }}</p>
+                </div>
+                <div class="col-sm">
+                    <p><strong style="font-weight: bold;">Dias en Area:</strong><br>{{ evolucion.dias_area }}</p>
+                </div>
+                <div class="col-sm">
+                    <p><strong style="font-weight: bold;">Historia Clinica:</strong><br>
+                        {{evolucion.id_historiaclinicaFK.cod_historiaclinica }}</p>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-sm-2">
+                    <h5><strong style="font-weight: bold;">Antecedentes:</strong></h5>
+                </div>
+                <div class="col-sm">
+                    <p>{{evolucion.id_historiaclinicaFK.antecedente}}</p>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-sm-2">
+                    <h5><strong style="font-weight: bold;">Diagnostico:</strong></h5>
+                </div>
+                <div class="col-sm">
+                    <p>{{evolucion.id_historiaclinicaFK.impresion_diagnostica}}</p>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-sm-2">
+                    <h5 style="font-weight:bold;">Examen Fisico:</h5>
+                </div>
+                <div class="col-sm">
+                    <div class="row">
+                        <div class="col-sm">
+                            <div class="table">
+                                <table id="customers" class="text-center">
+                                    <tr>
+                                        <td><strong style="font-weight: bold;">TA:</strong>
+                                            {{evolucion.id_examenfisicoFK.tension_arterial}}</td>
+                                        <td><strong style="font-weight: bold;">FC:</strong>
+                                            {{evolucion.id_examenfisicoFK.frecuencia_cardiaca}}</td>
+                                        <td><strong style="font-weight: bold;">FR:</strong></strong>
+                                            {{evolucion.id_examenfisicoFK.frecuencia_respiratoria}}</td>
+                                        <td><strong style="font-weight: bold;">TEMP AX:</strong>
+                                            {{evolucion.id_examenfisicoFK.temp_ax}}</td>
+                                        <td><strong style="font-weight: bold;">SAT:</strong>
+                                            {{evolucion.id_examenfisicoFK.sindrome_at}}</td>
+                                        <td><strong style="font-weight: bold;">PaO<sub>2</sub>:</strong>
+                                            {{evolucion.id_examenfisicoFK.pao}}</td>
+                                        <td><strong style="font-weight: bold;">FIO<sub>2</sub></strong>
+                                            {{evolucion.id_examenfisicoFK.fio}}</td>
+                                        <td><strong style="font-weight: bold;">PAO<sub>2</sub>/FIO<sub>2</sub>:</strong>
+                                            {{evolucion.id_examenfisicoFK.pao_fio}}</td>
+                                        <td><strong style="font-weight: bold;">PAS:</strong>
+                                            {{evolucion.id_examenfisicoFK.pas}}</td>
+                                        <td><strong style="font-weight: bold;">PAD:</strong>
+                                            {{evolucion.id_examenfisicoFK.pad}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong style="font-weight: bold;">PAM:</strong>
+                                            {{evolucion.id_examenfisicoFK.pam}}</td>
+                                        <td><strong style="font-weight: bold;">AVM:</strong>
+                                            {{evolucion.id_examenfisicoFK.avm}}</td>
+                                        <td><strong style="font-weight: bold;">MODO:</strong>
+                                            {{evolucion.id_examenfisicoFK.modo}} </td>
+                                        <td><strong style="font-weight: bold;">Noradrenalina:</strong>
+                                            {{evolucion.id_examenfisicoFK.noradrenalina}}</td>
+                                        <td><strong style="font-weight: bold;">Atracurio:</strong>
+                                            {{evolucion.id_examenfisicoFK.atracurio}}</td>
+                                        <td><strong style="font-weight: bold;">VC:</strong>
+                                            {{evolucion.id_examenfisicoFK.vc}}</td>
+                                        <td><strong style="font-weight: bold;">PEEP:</strong>
+                                            {{evolucion.id_examenfisicoFK.peep}}</td>
+                                        <td><strong style="font-weight: bold;">Prono Días:</strong>
+                                            {{evolucion.id_examenfisicoFK.prono_dias}}</td>
+                                        <td><strong style="font-weight: bold;">PI:</strong>
+                                            {{evolucion.id_examenfisicoFK.pi}}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-sm">
+                            <span><strong style="font-weight: bold;">Peso:</strong>
+                                {{evolucion.id_examenfisicoFK.peso}}</span><br>
+                            <span><strong style="font-weight: bold;">Piel y Mucosa:</strong>
+                                {{evolucion.id_examenfisicoFK.piel_mucosa}}</span><br>
+                            <span><strong style="font-weight: bold;">Neurologico:</strong>
+                                {{evolucion.id_examenfisicoFK.neurologico}}</span><br>
+                            <span><strong style="font-weight: bold;">Cardiopulmonar:</strong>
+                                {{evolucion.id_examenfisicoFK.cardiopulmonar}}</span><br>
+                            <span><strong style="font-weight: bold;">Abdomen:</strong>
+                                {{evolucion.id_examenfisicoFK.abdomen}}</span><br>
+                            <span><strong style="font-weight: bold;">Genitourinario:</strong>
+                                {{evolucion.id_examenfisicoFK.genitourinario}}</span><br>
+                            <span><strong style="font-weight: bold;">Musculoesqueletico:</strong>
+                                {{evolucion.id_examenfisicoFK.musculoesqueletico}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-sm-2">
+                    <h5 style="font-weight:bold;">Laboratorio:</h5>
+                </div>
+                <div class="col-sm">
+                    <div class="table">
+                        <table id="customers" class="text-center">
+                            <tr>
+                                <td><strong style="font-weight: bold;">GB:</strong>
+                                    {{evolucion.id_resultadolabFK.lab_gb}}</td>
+                                <td><strong style="font-weight: bold;">HB:</strong>
+                                    {{evolucion.id_resultadolabFK.lab_hb}}</td>
+                                <td><strong style="font-weight: bold;">PH:</strong>
+                                    {{evolucion.id_resultadolabFK.lab_ph}}</td>
+                                <td><strong style="font-weight: bold;">GOT:</strong>
+                                    {{evolucion.id_resultadolabFK.lab_got}}</td>
+                                <td><strong style="font-weight: bold;">NEU:</strong>
+                                    {{evolucion.id_resultadolabFK.lab_neu}}</td>
+                                <td><strong style="font-weight: bold;">HTCO:</strong>
+                                    {{evolucion.id_resultadolabFK.lab_htco}}</td>
+                                <td><strong style="font-weight: bold;">PCO:</strong>
+                                    {{evolucion.id_resultadolabFK.lab_pco}}</td>
+                                <td><strong style="font-weight: bold;">GPT:</strong>
+                                    {{evolucion.id_resultadolabFK.lab_gpt}}</td>
+                                <td><strong style="font-weight: bold;">LIN:</strong>
+                                    {{evolucion.id_resultadolabFK.lab_lin}}</td>
+                                <td><strong style="font-weight: bold;">CR:</strong>
+                                    {{evolucion.id_resultadolabFK.lab_cr}}</td>
+                                <td><strong style="font-weight: bold;">HCO:</strong>
+                                    {{evolucion.id_resultadolabFK.lab_hco}}</td>
+                                <td><strong style="font-weight: bold;">PT:</strong>
+                                    {{evolucion.id_resultadolabFK.lab_pt}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong style="font-weight: bold;">CAY:</strong>
+                                    {{evolucion.id_resultadolabFK.lab_cay}}</td>
+                                <td><strong style="font-weight: bold;">UREA:</strong>
+                                    {{evolucion.id_resultadolabFK.lab_urea}}</td>
+                                <td><strong style="font-weight: bold;">ALB:</strong>
+                                    {{evolucion.id_resultadolabFK.lab_alb}}</td>
+                                <td><strong style="font-weight: bold;">PO<sub>2</sub>:</strong>
+                                    {{evolucion.id_resultadolabFK.lab_po}}</td>
+                                <td><strong style="font-weight: bold;">PLQ:</strong>
+                                    {{evolucion.id_resultadolabFK.lab_plq}}</td>
+                                <td><strong style="font-weight: bold;">NA:</strong>
+                                    {{evolucion.id_resultadolabFK.lab_na}}</td>
+                                <td><strong style="font-weight: bold;">EB:</strong>
+                                    {{evolucion.id_resultadolabFK.lab_eb}}</td>
+                                <td><strong style="font-weight: bold;">CL:</strong>
+                                    {{evolucion.id_resultadolabFK.lab_cl}}</td>
+                                <td><strong style="font-weight: bold;">K:</strong>
+                                    {{evolucion.id_resultadolabFK.lab_k}}</td>
+                                <td><strong style="font-weight: bold;">LACT:</strong>
+                                    {{evolucion.id_resultadolabFK.lab_lact}}</td>
+                                <td><strong style="font-weight: bold;">DD:</strong>
+                                    {{evolucion.id_resultadolabFK.lab_dd}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-sm-2">
+                    <h5 style="font-weight: bold;">Cultivos y Tratamiento Antibiótico</h5>
+                </div>
+                <div class="col-sm text-center">
+                    <div class="table">
+                        <h5>Cultivo</h5>
+                        <table id="customers">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Fecha</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for d in evolucion.det_cultivo_evolucion_set.all %}
+                                <tr>
+                                    <td>{{ d.id_cultivoFK.nombre }}</td>
+                                    <td>{{ d.fecha|date:"d-m-Y" }}</td>
+                                    <td>{{ d.estado }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-sm text-center">
+                    <div class="table">
+                        <table id="customers">
+                            <h5>Tratamiento</h5>
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Cantidad</th>
+                                    <th>Indicación</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for d in evolucion.det_tratmiento_evolucion_set.all %}
+                                <tr>
+                                    <td>{{ d.id_medicamentoFK.nombre }}</td>
+                                    <td>{{ d.cantidad }}</td>
+                                    <td>{{ d.indicacion }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-sm-2">
+                    <h5 style="font-weight: bold;">Análisis</h5>
+                </div>
+                <div class="col-sm">
+                    <p style="text-align: justify;">{{evolucion.analisis}}</p>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-sm-2">
+                    <h5 style="font-weight: bold;">Plan</h5>
+                </div>
+                <div class="col-sm">
+                    <p style="text-align: justify;">{{evolucion.plan}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="stats">
+                {{direccion}} - {{ciudad}}
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,62 @@
+{% extends 'hospitalapp/base.html' %}
+{% load static %}
+{% block title %}
+Paciente - Lista
+{% endblock %}
+{% block content %}
+<div class="container">
+
+    <div class="row justify-content-center">
+        <div class="col-sm-12 col-sm-offset-2">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <h3 class="row justify-content-center"><strong>Listado de Pacientes</strong></h3>
+                        <div class="table-responsive" style="box-shadow: 0 0 5px transparent; border-radius: 15px;">
+                            <table class="table table-hover" id="tblpaciente">
+                                <thead class="text-info">
+                                    <tr>
+                                        <th class="th-sm" scope="col">Nombre Completo</th>
+                                        <th class="th-sm" scope="col">Nro. Documento</th>
+                                        <th class="th-sm" scope="col">Edad</th>
+                                        <th class="th-sm" scope="col">Residencia</th>
+                                        <th class="th-sm" scope="col">Cod. HC</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for historia in object_list %}
+                                    <tr>
+                                        <td>{{ historia.id_pacienteFK.nombre }} {{historia.id_pacienteFK.apellido_paterno }} {{historia.id_pacienteFK.apellido_materno }}</td>
+                                        <td>{{ historia.id_pacienteFK.nro_documento }}</td>
+                                        <td>{{ historia.id_pacienteFK.edad }}</td>
+                                        <td>{{ historia.id_pacienteFK.residencia }}</td>
+                                        <td>{{ historia.cod_historiaclinica }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    var tblpaciente = $('#tblpaciente').DataTable({
+        "language": {
+            "url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        paging: true,
+        filter: true,
+        info: false,
+        autoWidth: false,
+        responsive: true,
+        destroy: true,
+        ordering: false,
+    })
+</script>
+{% endblock javascripts %}

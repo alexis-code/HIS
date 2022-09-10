@@ -1,0 +1,228 @@
+{% extends 'hospitalapp/base.html' %}
+{% block stylesheets %}
+{% endblock stylesheets %}
+{% block title %}
+Reporte - Dashboard
+{% endblock title %}
+{% block content %}
+<div class="container">
+  <div class="row">
+    <a href="{% url 'indexHistoriaCAll' %}" class="btn btn-success animation-on-hover">Visualizar Cardex</a>
+  </div>
+  <br>
+  <div class="row">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-category">
+          <h4 class="card-title">Crecimiento Mensual Historias Clínicas</h4>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="chart-area">
+          <canvas id="chart_hc"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-category">
+          <h4 class="card-title">Top 3 - Medicamentos usados</h4>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="chart-area">
+          <canvas id="chart_medicamentos"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-category">
+          <h4 class="card-title">Pacientes por Rango de Edades</h4>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="chart-area">
+          <canvas id="char_rangos"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+{% block javascripts %}
+<script>
+  gradientChartOptionsConfiguration = {
+    maintainAspectRatio: false,
+    legend: {
+      display: false
+    },
+
+    tooltips: {
+      backgroundColor: '#fff',
+      titleFontColor: '#333',
+      bodyFontColor: '#666',
+      bodySpacing: 4,
+      xPadding: 12,
+      mode: "nearest",
+      intersect: 0,
+      position: "nearest"
+    },
+    responsive: true,
+    scales: {
+      yAxes: [{
+        ticks: {
+          suggestedMin: 0,
+          suggestedMax: 5,
+          padding: 20,
+          fontColor: "#9a9a9a"
+        }
+      }],
+    },
+  };
+
+  var ctx = document.getElementById("chart_hc").getContext("2d");
+
+  var gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
+
+  gradientStroke.addColorStop(1, 'rgba(72,72,176,0.2)');
+  gradientStroke.addColorStop(0.2, 'rgba(72,72,176,0.0)');
+  gradientStroke.addColorStop(0, 'rgba(119,52,169,0)'); //purple colors
+  let arreglo = {{ mes| safe}}
+  var data = {
+    labels: arreglo,
+    datasets: [{
+      label: "Crecimiento Mensual",
+      fill: false,
+      backgroundColor: gradientStroke,
+      borderColor: '#44B1EB',
+      borderWidth: 2,
+      borderDash: [],
+      borderDashOffset: 0.0,
+      pointBackgroundColor: '#44B1EB',
+      pointBorderColor: 'rgba(255,255,255,0)',
+      pointHoverBackgroundColor: '#d048b6',
+      pointBorderWidth: 20,
+      pointHoverRadius: 4,
+      pointHoverBorderWidth: 15,
+      pointRadius: 4,
+      data: {{ cantidad| safe}},
+  }]
+};
+  var myChart = new Chart(ctx, {
+    type: 'line',
+    data: data,
+    options: gradientChartOptionsConfiguration
+  });
+</script>
+<script>
+  gradientChartOptionsConfiguration_medic = {
+    maintainAspectRatio: false,
+    legend: {
+      display: false
+    },
+
+    tooltips: {
+      backgroundColor: '#fff',
+      titleFontColor: '#333',
+      bodyFontColor: '#666',
+      bodySpacing: 4,
+      xPadding: 12,
+      mode: "nearest",
+      intersect: 0,
+      position: "nearest"
+    },
+    responsive: true,
+    scales: {
+      yAxes: [{
+        ticks: {
+          suggestedMin: 0,
+          suggestedMax: 5,
+          padding: 20,
+          fontColor: "#9a9a9a"
+        }
+      }],
+    },
+  };
+  var ctx = document.getElementById("chart_medicamentos").getContext("2d");
+
+  var gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
+
+  gradientStroke.addColorStop(1, 'rgba(72,72,176,0.2)');
+  gradientStroke.addColorStop(0.2, 'rgba(72,72,176,0.0)');
+  gradientStroke.addColorStop(0, 'rgba(119,52,169,0)'); //purple colors
+  let arreglo_medic = {{ nombre_medic| safe}}
+  var data = {
+    labels: arreglo_medic,
+    datasets: [{
+      label: "Cantidad",
+      fill: true,
+      backgroundColor: gradientStroke,
+      borderColor: '#44B1EB',
+      borderWidth: 2,
+      borderDash: [],
+      borderDashOffset: 0.0,
+      backgroundColor: [
+        'rgb(255, 99, 132)',
+        'rgb(54, 162, 235)',
+        'rgb(255, 205, 86)'
+      ],
+      pointBorderColor: 'rgba(255,255,255,0)',
+      pointHoverBackgroundColor: '#d048b6',
+      pointBorderWidth: 20,
+      pointHoverRadius: 4,
+      pointHoverBorderWidth: 15,
+      pointRadius: 4,
+      data: {{ cantidad_medic| safe}},
+  }]
+};
+  var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: data,
+    options: gradientChartOptionsConfiguration_medic
+  });
+</script>
+<script>
+  var ctx = document.getElementById("char_rangos").getContext("2d");
+
+  var gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
+
+  gradientStroke.addColorStop(1, 'rgba(72,72,176,0.2)');
+  gradientStroke.addColorStop(0.2, 'rgba(72,72,176,0.0)');
+  gradientStroke.addColorStop(0, 'rgba(119,52,169,0)'); //purple colors
+  let arreglo_rango = {{ rango| safe}}
+  var data = {
+    labels: arreglo_rango,
+    datasets: [{
+      fill: true,
+      backgroundColor: [
+        'rgb(255, 99, 132)',
+        'rgb(54, 162, 235)',
+        'rgb(255, 205, 86)',
+        'rgb(99, 242, 213)',
+        'rgb(154, 230, 123)',
+      ],
+      borderColor: '#44B1EB',
+      borderWidth: 2,
+      borderDash: [],
+      borderDashOffset: 0.0,
+      pointBackgroundColor: '#44B1EB',
+      pointBorderColor: 'rgba(255,255,255,0)',
+      pointHoverBackgroundColor: '#d048b6',
+      pointBorderWidth: 20,
+      pointHoverRadius: 4,
+      pointHoverBorderWidth: 15,
+      pointRadius: 4,
+      data: {{ cantidad_rango| safe}},
+}]
+};
+  var myChart = new Chart(ctx, {
+    type: 'pie',
+    data: data,
+  });
+</script>
+{% endblock javascripts %}

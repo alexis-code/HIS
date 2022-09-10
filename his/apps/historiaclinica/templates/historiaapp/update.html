@@ -1,0 +1,341 @@
+{% extends 'hospitalapp/base.html' %}
+{% load static %}
+{% block title %}
+Historia Clínica|Modificar
+{% endblock title %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-sm-8 col-sm-offset-2">
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="historia_edit">
+            <input type="hidden" name="medico_updated" value="{{user.first_name}} {{user.last_name}}">
+
+            <!-- Formulario para el paciente -->
+            <div class="row">
+                <div class="card" style="width: 50rem">
+                    <div class="card-header">
+                        <h6 style="text-align: center;">Datos del Paciente</h6>
+                    </div>
+                    <hr>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                                <label class="bmd-label-floating">Nro. de Documento*</label>
+                                <input type="number" min="0" value="{{object.id_pacienteFK.nro_documento}}" required class="form-control" name="nro_documento"/>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">Complemento*</label>
+                                <select class="form-control" name="complementario_ci" required>
+                                    <option value="SC" {% if object.id_pacienteFK.complementario_ci == 'SC'%}selected{% endif %}>SC</option>
+                                    <option value="BE" {% if object.id_pacienteFK.complementario_ci == 'BE'%}selected{% endif %}>BE</option>
+                                    <option value="PD" {% if object.id_pacienteFK.complementario_ci == 'PD'%}selected{% endif %}>PD</option>
+                                    <option value="TJ" {% if object.id_pacienteFK.complementario_ci == 'TJ'%}selected{% endif %}>TJ</option>
+                                    <option value="LP" {% if object.id_pacienteFK.complementario_ci == 'LP'%}selected{% endif %}>LP</option>
+                                    <option value="CB" {% if object.id_pacienteFK.complementario_ci == 'CB'%}selected{% endif %}>CB</option>
+                                    <option value="CH" {% if object.id_pacienteFK.complementario_ci == 'CH'%}selected{% endif %}>CH</option>
+                                    <option value="PT" {% if object.id_pacienteFK.complementario_ci == 'PT'%}selected{% endif %}>PT</option>
+                                    <option value="OR" {% if object.id_pacienteFK.complementario_ci == 'OR'%}selected{% endif %}>OR</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label>Sexo*</label>
+                                <select class="form-control" name="sexo" required>
+                                    <option value="M" {% if object.id_pacienteFK.sexo == 'M'%}selected{% endif %}>Masculino</option>
+                                    <option value="F" {% if object.id_pacienteFK.sexo == 'F'%}selected{% endif %}>Femenino</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="bmd-label-floating">Vacuna Covid*</label>
+                                <select class="form-control" name="vacuna_covid" required>
+                                    <option value="Si" {% if object.id_pacienteFK.vacuna_covid == 'Si'%}selected{% endif %}>Si</option>
+                                    <option value="No" {% if object.id_pacienteFK.vacuna_covid == 'No'%}selected{% endif %}>No</option>
+                                    <option value="Primera Dosis" {% if object.id_pacienteFK.vacuna_covid == 'Primera Dosis'%}selected{% endif %}>1° Dosis</option>
+                                    <option value="Segunda Dosis" {% if object.id_pacienteFK.vacuna_covid == 'Segunda Dosis'%}selected{% endif %}>2° Dosis</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label class="bmd-label-floating">Nombre del Paciente*</label>
+                                <input type="text" class="form-control" name="nombre"
+                                    value="{{object.id_pacienteFK.nombre}}" required/>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="bmd-label-floating">Apellido Paterno*</label>
+                                <input type="text" class="form-control" name="apellido_paterno"
+                                    value="{{object.id_pacienteFK.apellido_paterno}}" required/>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="bmd-label-floating">Apellido Materno*</label>
+                                <input type="text" class="form-control" name="apellido_materno"
+                                    value="{{object.id_pacienteFK.apellido_materno}}" required/>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label class="bmd-label-floating">Ocupación</label>
+                                <input type="text" class="form-control" name="ocupacion"
+                                    value="{{object.id_pacienteFK.ocupacion}}" required/>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="bmd-label-floating">Estado Civil</label>
+                                <input type="text" name="estado_civil" class="form-control"
+                                    value="{{object.id_pacienteFK.estado_civil}}" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label class="bmd-label-floating">Residencia*</label>
+                                <input type="text" class="form-control" name="residencia"
+                                    value="{{object.id_pacienteFK.residencia}}" required/>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="bmd-label-floating">Procedencia*</label>
+                                <input type="text" class="form-control" name="procedencia"
+                                    value="{{object.id_pacienteFK.procedencia}}" required />
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="bmd-label-floating">Domicilio</label>
+                                <input type="text" class="form-control" name="domicilio"
+                                    value="{{object.id_pacienteFK.domicilio}}" required/>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-4" style="margin-top: 6%;">
+                                <label>Fecha Nacimiento*</label>
+                                <input type="date" class="form-control datetimepicker" name="fecha_nacimiento"
+                                    value="{{object.id_pacienteFK.fecha_nacimiento|date:'Y-m-d' }}" required/>
+                            </div>
+                            <div class="form-group col-md-4" style="margin-top: 6%;">
+                                <label>Edad</label>
+                                <input type="number" class="form-control" value="{{object.id_pacienteFK.edad }}" readonly/>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label class="bmd-label-floating">Telefono*</label>
+                                <input type="number" class="form-control" name="telefono" value="{{ object.id_pacienteFK.telefono }}" required/>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="bmd-label-floating">Nombre de Referencia*</label>
+                                <input type="text" class="form-control" name="nombre_referencia" value="{{ object.id_pacienteFK.nombre_referencia }}" required/>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="bmd-label-floating">Telefono de Referencia*</label>
+                                <input type="number" class="form-control" name="telefono_referencia" value="{{ object.id_pacienteFK.telefono_referencia }}" required/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulario para la historia clinica -->
+            <div class="row">
+                <div class="card" style="width: 50rem">
+                    <div class="card-header">
+                        <h6 style="text-align: center;">Datos de la Historia Clinica</h6>
+                    </div>
+                    <hr>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label class="bmd-label-floating">Médico*</label>
+                                <input type="text" class="form-control" id="medico"
+                                    value="{{ user.first_name }} {{ user.last_name }}" readonly />
+                                <input type="hidden" name="id_medicoFK" value="{{ user.id_medicoPK }}" />
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="bmd-label-floating">Cod. Historia Clinica*</label>
+                                <input type="number" class="form-control" name="cod_historiaclinica"
+                                    value="{{object.cod_historiaclinica}}" required/>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label>Fecha de Ingreso al Hospital*</label>
+                                <input type="datetime-local" class="form-control datetimepicker"
+                                    name="fecha_ingresohospital" id="fechaIngreso" required
+                                    value="{{object.fecha_ingresohospital|date:'Y-m-d'}}T{{object.fecha_ingresohospital|time:'H:i'}}" />
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label>Fecha de Ingreso a Area</label>
+                                <input type="datetime-local" class="form-control datetimepicker"
+                                    name="fecha_ingresoarea"
+                                    value="{{object.fecha_ingresoarea|date:'Y-m-d'}}T{{object.fecha_ingresoarea|time:'H:i'}}" />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label>Nro. de Cama</label>
+                                <input type="number" min="0" max="999" class="form-control datetimepicker"
+                                    name="nro_cama" value="{{object.nro_cama}}" required/>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label class="bmd-label-floating">Grado Instrucción*</label>
+                                <input type="text" class="form-control" name="grado_instruccion"
+                                    value="{{object.grado_instruccion}}" required/>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label class="bmd-label-floating">Proviene de*</label>
+                                <select name="proviene" class="form-control" required>
+                                    <option value="emergencia" {% if object.proviene == "emergencia" %}selected{% endif %} >Emergencia</option>
+                                    <option value="consulta"   {% if object.proviene == "consulta" %}selected{% endif %} >Consulta ext</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label class="bmd-label-floating">Antecedente*</label>
+                                <textarea type="text" class="form-control" name="antecedente" rows="5"
+                                    required>{{object.antecedente}}</textarea>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="bmd-label-floating">Historia de enfermedad actual*</label>
+                                <textarea class="form-control" name="historia_enfermedad_actual"
+                                    rows="5" required>{{object.historia_enfermedad_actual}}</textarea>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="bmd-label-floating">Impresión Diagnostica*</label>
+                                <textarea class="form-control" name="impresion_diagnostica"
+                                    rows="5" required>{{object.impresion_diagnostica}}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulario para los datos del examen fisico -->
+            <div class="row">
+                <div class="card" style="width: 50rem">
+                    <div class="card-header">
+                        <h6 style="text-align: center;">Datos del Exámen Físico</h6>
+                    </div>
+                    <hr>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">TA</label>
+                                <input type="text" class="form-control" name="tension_arterial"
+                                    value="{{ object.tension_arterial}}"  pattern="[/0-9]{1,15}" required/>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">FC</label>
+                                <input type="text" class="form-control" type="number" step="0.01" name="frecuencia_cardiaca"
+                                    value="{{ object.frecuencia_cardiaca}}" pattern="[.0-9]{1,15}" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">FR</label>
+                                <input type="text" class="form-control" type="number" step="0.01" name="frecuencia_respiratoria"
+                                    value="{{ object.frecuencia_respiratoria}}" pattern="[.0-9]{1,15}" required/>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">TEMP AX</label>
+                                <input type="text" class="form-control" type="number" step="0.01" name="temp_ax"
+                                    value="{{ object.temp_ax}}" pattern="[.0-9]{1,15}" required/>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">SAT</label>
+                                <input type="text" class="form-control" type="number" step="0.01" name="sindrome_at"
+                                    value="{{ object.sindrome_at}}" pattern="[.0-9]{1,15}" required/>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-2">
+                                <label class="bmd-label-floating">Peso</label>
+                                <input type="text" class="form-control" type="number" step="0.01" name="peso"
+                                    value="{{ object.peso}}" pattern="[.0-9]{1,15}" required/>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label class="bmd-label-floating">Piel y Mucosas</label>
+                                <textarea type="text" class="form-control" name="piel_mucosa"
+                                    rows="3" required>{{ object.piel_mucosa}}</textarea>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="bmd-label-floating">Neurologico</label>
+                                <textarea type="text" class="form-control" name="neurologico"
+                                    rows="3" required>{{ object.neurologico}}</textarea>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="bmd-label-floating">Cardiopulmonar</label>
+                                <textarea type="text" class="form-control" name="cardiopulmonar"
+                                    rows="3" required>{{ object.cardiopulmonar}}</textarea>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="bmd-label-floating">Abdomen</label>
+                                <textarea type="text" class="form-control" name="abdomen"
+                                    rows="3" required>{{ object.abdomen}}</textarea>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="bmd-label-floating">Genitourinario</label>
+                                <textarea type="text" class="form-control" name="genitourinario"
+                                    rows="3" required>{{ object.genitourinario}}</textarea>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="bmd-label-floating">Musculoesqueletico</label>
+                                <textarea type="text" class="form-control" name="musculoesqueletico"
+                                    rows="3" required>{{ object.musculoesqueletico}}</textarea>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <input type="submit" class="btn btn-success" value="{{label_boton}}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script src="{% static 'assets/jquery-ui-1.12.1.custom/jquery-ui.min.js' %}"></script>
+<script>
+    $(function () {
+        $('input[name="nro_documento"]').autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: window.location.pathname,
+                    type: 'POST',
+                    data: {
+                        'action': 'search_nro_ci',
+                        'csrfmiddlewaretoken': "{{csrf_token}}",
+                        'term': request.term,
+                    },
+                    dataType: 'json',
+                }).done(function (data) {
+                    response(data);
+                }).fail(function (data) {
+                    alert(data.error);
+                });
+            },
+            delay: 500,
+            minLength: 1,
+            select: function (event, ui) {
+                $.ajax({
+                    url: "/historia/redirigir/evolucion/",
+                    type: 'POST',
+                    data: {
+                        'csrfmiddlewaretoken': "{{csrf_token}}",
+                        'nro_documento': ui.item.nro_documento,
+                    },
+                    dataType: 'json',
+                }).done(function (data) {
+                    window.location.href = "/evolucion/create/"+data.id_HC;
+                }).fail(function (data) {
+                    alert(data.error);
+                });
+            },
+        });
+    });
+</script>
+{% endblock %}

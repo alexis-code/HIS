@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {%load static%}
+    <title>Epicrisis|Detalle</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{% static 'assets/img/hj.ico' %}" />
+    <!-- Material Kit CSS -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,600,700,800" rel="stylesheet" />
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+    <!-- Nucleo Icons -->
+    <link href="{% static 'assets/css/nucleo-icons.css' %}" rel="stylesheet" />
+    <!-- CSS Files -->
+    <link href="{% static 'assets/css/black-dashboard.css' %}" rel="stylesheet" />
+    <link href="{% static 'assets/datatable/datatables.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'assets/jquery-ui-1.12.1.custom/jquery.css' %}" rel="stylesheet" />
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link href="{% static 'assets/css/micss.css' %}" rel="stylesheet" />
+
+    <style>
+        html,
+        body {
+            width: auto;
+            background-color: white;
+        }
+
+        #customers {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #customers th {
+            text-align: center;
+        }
+
+
+
+
+        #customers2 {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #customers2 td,
+        #customers2 th {
+            border: 1px solid #ddd;
+        }
+
+        #customers2 th {
+            padding-top: 2px;
+            padding-bottom: 2px;
+            padding: 4px;
+            text-align: center;
+            background-color: #04AA6D;
+            color: white;
+        }
+    </style>
+
+</head>
+
+<body class="white-content">
+    <div class="card">
+        <dvi class="card-header">
+            <div class="row justify-content-center">
+                <div class="col-sm text-center">
+                    <img src="{% static 'assets/img/logo-gobernacion.png' %}" alt="logo" width="140px;" />
+                </div>
+                <div class="col-sm-5 text-center">
+                    <h3 class="mt-2">RESUMEN DE ALTA (EPICRISIS)</h3>
+                    <div class="row text-center">
+                        <div class="col-sm">
+                            <p><strong style="font-weight: bold;">HC:</strong>
+                                {{epicrisis.id_evolucionFK.id_historiaclinicaFK.cod_historiaclinica}}</p>
+                        </div>
+                        <div class="col-sm">
+                            <p><strong style="font-weight: bold;">Fecha de Nac.:</strong>
+                                {{epicrisis.id_evolucionFK.id_historiaclinicaFK.id_pacienteFK.fecha_nacimiento|date:"d-m-Y"}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm text-center">
+                    <a href="/epicrisis/index/{{epicrisis.id_evolucionFK.id_historiaclinicaFK_id}}">
+                        <img src="{% static 'assets/img/logo-his.png' %}" alt="logo" width="60px;" />
+                    </a>
+                </div>
+            </div>
+        </dvi>
+        <div class="card-body">
+            <div class="row text-center">
+                <div class="col-sm">
+                    <p><strong style="font-weight: bold;">Paciente:</strong><br>
+                        {{epicrisis.id_evolucionFK.id_historiaclinicaFK.id_pacienteFK.nombre}}
+                        {{epicrisis.id_evolucionFK.id_historiaclinicaFK.id_pacienteFK.apellido_paterno}}
+                        {{epicrisis.id_evolucionFK.id_historiaclinicaFK.id_pacienteFK.apellido_materno}}</p>
+                </div>
+                <div class="col-sm">
+                    <p><strong style="font-weight: bold;">Edad:</strong><br>
+                        {{epicrisis.id_evolucionFK.id_historiaclinicaFK.id_pacienteFK.edad}}</p>
+                </div>
+                <div class="col-sm text-left">
+                    <p><strong style="font-weight: bold;">Ingreso:</strong>
+                        {{epicrisis.id_evolucionFK.id_historiaclinicaFK.fecha_ingresohospital|date:"d-m-Y"}}</p>
+                    <p><strong style="font-weight: bold;">Egreso:</strong> {{epicrisis.fecha|date:"d-m-Y"}}</p>
+                </div>
+                <div class="col-sm">
+                    <p><strong style="font-weight: bold;">Estancia Dias:</strong><br> {{epicrisis.total_dias}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <p><strong style="font-weight: bold;">Ingreso por:</strong>
+                        {{epicrisis.id_evolucionFK.id_historiaclinicaFK.proviene}} </p>
+                </div>
+                <div class="col-sm">
+                    <p><strong style="font-weight: bold;">Referido del Centro:</strong> {{epicrisis.referido_centro}}
+                    </p>
+                </div>
+                <div class="col-sm">
+                    <p><strong style="font-weight: bold;">Red:</strong> {{epicrisis.red}}</p>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-sm-2">
+                    <p><strong style="font-weight: bold;">Diagnóstico o razón que motivo su ingreso:</strong></p>
+                </div>
+                <div class="col-sm">
+                    <p>{{epicrisis.id_evolucionFK.id_historiaclinicaFK.historia_enfermedad_actual}}</p>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-sm-2">
+                    <p><strong style="font-weight: bold;">Diagnóstico de Egreso:</strong></p>
+                </div>
+                <div class="col-sm-6">
+                    <ol>
+                        <table id="customers">
+                            <thead>
+                                <tr>
+                                    <th class="text-left">Diagnóstico</th>
+                                    <th class="text-left">Cie 10</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for d in epicrisis.det_diagnosticodetalle_set.all %}
+                                <tr>
+                                    <td>
+                                        <li>{{ d.id_codigocieFK.diagnostico }}</li>
+                                    </td>
+                                    <td> {{ d.id_codigocieFK_id }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </ol>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-sm">
+                    <p><strong style="font-weight: bold;">Procedimientos Mayores:</strong><br>
+                        {{epicrisis.proc_mayores}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm">
+                    <p><strong style="font-weight: bold;">Resúmen de la Evolución Hospitalaria:</strong><br>
+                        {{epicrisis.resumen_evolucion}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2">
+                    <p><strong style="font-weight: bold;">Complicaciones:</strong></p>
+                </div>
+                <div class="col-sm">
+                    <p>{{epicrisis.complicaciones}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2">
+                    <p><strong style="font-weight: bold;">Intervenciones Quirurgicas:</strong></p>
+                </div>
+                <div class="col-sm">
+                    <p>{{epicrisis.intervenciones}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm">
+                    <p><strong style="font-weight: bold;">Estudios Diagnósticos Realizados:</strong>
+                        {{epicrisis.estudios}}</p>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-sm-3">
+                    <p><strong style="font-weight: bold;">Estudio de Imágenes:</strong><br>
+                        {{epicrisis.estudio_imagenes}}</p>
+                </div>
+                <div class="col-sm">
+                    <div class="table">
+                        <table id="customers2" class="text-center">
+                            <tr>
+                                <td><strong style="font-weight: bold;">GB:</strong>
+                                    {{epicrisis.id_evolucionFK.id_resultadolabFK.lab_gb}}</td>
+                                <td><strong style="font-weight: bold;">HB:</strong>
+                                    {{epicrisis.id_evolucionFK.id_resultadolabFK.lab_hb}}</td>
+                                <td><strong style="font-weight: bold;">PH:</strong>
+                                    {{epicrisis.id_evolucionFK.id_resultadolabFK.lab_ph}}</td>
+                                <td><strong style="font-weight: bold;">GOT:</strong>
+                                    {{epicrisis.id_evolucionFK.id_resultadolabFK.lab_got}}</td>
+                                <td><strong style="font-weight: bold;">NEU:</strong>
+                                    {{epicrisis.id_evolucionFK.id_resultadolabFK.lab_neu}}</td>
+                                <td><strong style="font-weight: bold;">HTCO:</strong>
+                                    {{epicrisis.id_evolucionFK.id_resultadolabFK.lab_htco}}</td>
+                                <td><strong style="font-weight: bold;">PCO:</strong>
+                                    {{epicrisis.id_evolucionFK.id_resultadolabFK.lab_pco}}</td>
+                                <td><strong style="font-weight: bold;">GPT:</strong>
+                                    {{epicrisis.id_evolucionFK.id_resultadolabFK.lab_gpt}}</td>
+                                <td><strong style="font-weight: bold;">LIN:</strong>
+                                    {{epicrisis.id_evolucionFK.id_resultadolabFK.lab_lin}}</td>
+                                <td><strong style="font-weight: bold;">CR:</strong>
+                                    {{epicrisis.id_evolucionFK.id_resultadolabFK.lab_cr}}</td>
+                                <td><strong style="font-weight: bold;">HCO:</strong>
+                                    {{epicrisis.id_evolucionFK.id_resultadolabFK.lab_hco}}</td>
+                                <td><strong style="font-weight: bold;">PT:</strong>
+                                    {{epicrisis.id_evolucionFK.id_resultadolabFK.lab_pt}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong style="font-weight: bold;">CAY:</strong>
+                                    {{epicrisis.id_evolucionFK.id_resultadolabFK.lab_cay}}</td>
+                                <td><strong style="font-weight: bold;">UREA:</strong>
+                                    {{epicrisis.id_evolucionFK.id_resultadolabFK.lab_urea}}</td>
+                                <td><strong style="font-weight: bold;">ALB:</strong>
+                                    {{epicrisis.id_evolucionFK.id_resultadolabFK.lab_alb}}</td>
+                                <td><strong style="font-weight: bold;">PO<sub>2</sub>:</strong>
+                                    {{epicrisis.id_evolucionFK.id_resultadolabFK.lab_po}}</td>
+                                <td><strong style="font-weight: bold;">PLQ:</strong>
+                                    {{epicrisis.id_evolucionFK.id_resultadolabFK.lab_plq}}</td>
+                                <td><strong style="font-weight: bold;">NA:</strong>
+                                    {{epicrisis.id_evolucionFK.id_resultadolabFK.lab_na}}</td>
+                                <td><strong style="font-weight: bold;">EB:</strong>
+                                    {{epicrisis.id_evolucionFK.id_resultadolabFK.lab_eb}}</td>
+                                <td><strong style="font-weight: bold;">CL:</strong>
+                                    {{epicrisis.id_evolucionFK.id_resultadolabFK.lab_cl}}</td>
+                                <td><strong style="font-weight: bold;">K:</strong>
+                                    {{epicrisis.id_evolucionFK.id_resultadolabFK.lab_k}}</td>
+                                <td><strong style="font-weight: bold;">LACT:</strong>
+                                    {{epicrisis.id_evolucionFK.id_resultadolabFK.lab_lact}}</td>
+                                <td><strong style="font-weight: bold;">DD:</strong>
+                                    {{epicrisis.id_evolucionFK.id_resultadolabFK.lab_dd}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-sm-3">
+                    <p><strong style="font-weight: bold;">Condición al Alta:</strong> {{epicrisis.condicion_alta}}</p>
+                </div>
+                <div class="col-sm-3">
+                    <p><strong style="font-weight: bold;">Contra Referido:</strong> {{epicrisis.contra_referido}}</p>
+                </div>
+            </div>
+            <div class="row">
+                {% if epicrisis.motivo_alta != "Otros" %}
+                <div class="col-sm">
+                    <p><strong style="font-weight: bold;">Motivo Alta:</strong> {{epicrisis.motivo_alta}}</p>
+                </div>
+                {% endif %}
+                {% if epicrisis.motivo_alta == "Otros" %}
+                <div class="col-sm-2">
+                    <p><strong style="font-weight: bold;">Motivo Alta:</strong> Otros:</p>
+                </div>
+                <div class="col-sm">
+                    <p>{{epicrisis.motivo_descripcion}}</p>
+                </div>
+                {% endif %}
+            </div>
+            <div class="row">
+                <div class="col-sm">
+                    <p><strong style="font-weight: bold;">Plan de Tratamiento al alta/ cuidados/recomendaciones
+                            vigilancia/problemas clínicos pendientes:</strong><br> {{epicrisis.plan}}</p>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row text-center">
+            <div class="col-sm">
+                <p><strong style="font-weight: bold;">Médico:</strong> {{user.first_name}} {{user.last_name}}</p>
+            </div>
+            <div class="col-sm">
+                <p><strong style="font-weight: bold;">Firma:</strong></p>
+            </div>
+            <div class="col-sm">
+                <p><strong style="font-weight: bold;">Fecha:</strong> {{epicrisis.fecha|date:"d-m-Y"}}</p>
+            </div>
+        </div>
+    </div>
+    {% block script %}
+    <script>
+
+    </script>
+    {% endblock %}
+</body>
+
+</html>

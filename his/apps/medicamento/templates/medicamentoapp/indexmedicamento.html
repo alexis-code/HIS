@@ -1,0 +1,122 @@
+{% extends 'hospitalapp/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <a class="btn btn-warning" href="{% url 'createmedicamento' %}">Registrar Medicamento</a>
+    </div>
+    <br>
+    <div class="row justify-content-center">
+        <div class="col-sm-12 col-sm-offset-2">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        {% if messages %}
+                        <div class="row">
+                            <div class="col">
+                                {% for message in messages %}
+                                {% if message.tags == "error" %}
+                                <div class="alert alert-danger fade show" role="alert">
+                                    {% else %}
+                                    <div class="alert alert-success fade show" role="alert">
+                                        {% endif %}
+                                        <strong>{{message}}</strong>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <i class="tim-icons icon-simple-remove"></i>
+                                        </button>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+                            <h3 class="row justify-content-center"><strong>Listado de Medicamentos</strong></h3>
+                            <div class="table-responsive" style="box-shadow: 0 0 5px transparent; border-radius: 15px;">
+                                <table class="table table-hover" id="tblmedicamento">
+                                    <thead class="text-info">
+                                        <tr>
+                                            <th class="th-sm" scope="col">#</th>
+                                            <th class="th-sm" scope="col">Nombre</th>
+                                            <th class="th-sm" scope="col">Medida</th>
+                                            <th class="th-sm" scope="col">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for medicamento in object_list %}
+                                        <tr>
+                                            <td>{{ medicamento.id_medicamentoPK }}</td>
+                                            <td>{{ medicamento.nombre }}</td>
+                                            <td>{{ medicamento.medida }}</td>
+                                            <td>
+                                                <a href="/medicamento/update/{{ medicamento.id_medicamentoPK }}"
+                                                    rel="tooltip" data-placement="bottom" title="Editar"><i
+                                                        class="material-icons"
+                                                        style="font-size: 20px;color: darkcyan;">edit</i></a>
+                                                <a href="javascript:cambiar_estado({{ medicamento.id_medicamentoPK }})"
+                                                    rel="tooltip" data-placement="bottom" title="Anular"><i
+                                                        class="material-icons"
+                                                        style="font-size: 20px;color: darkcyan;">autorenew</i></a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+<script>
+    $(document).ready(function () {
+        $('#tblmedicamento').DataTable({
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            paging: true,
+            filter: true,
+            info: false,
+            autoWidth: false,
+            responsive: true,
+            destroy: true,
+            ordering: false,
+        })
+    });
+</script>
+<script>
+    function cambiar_estado(id_medicamento) {
+        $.confirm({
+            title: 'Cambiar Estado!',
+            content: 'Desea confirmar?',
+            buttons: {
+                confirmar: {
+                    btnClass: 'btn-success',
+                    action: function () {
+                        $.ajax({
+                            type: 'POST',
+                            url: "{% url 'MedicamentoChangeSatus' %}",
+                            data: {
+                                "csrfmiddlewaretoken": "{{ csrf_token }}",
+                                "pk": id_medicamento,
+                            },
+                            success: function (response) {
+                                location.reload();
+                            }
+                        });
+                    }
+
+                },
+                cancelar: {
+                    btnClass: 'btn-danger',
+                },
+            }
+        });
+
+    }
+</script>
+{% endblock javascripts %}

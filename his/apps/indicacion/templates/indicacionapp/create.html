@@ -1,0 +1,624 @@
+{% extends 'hospitalapp/base.html' %}
+{% load static %}
+{% block title %}
+Indicación - Crear
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="card" style="width: 50rem;">
+            <div class="card-header card-header-success">
+                <div class="row">
+                    <div class="col">
+                        <p><strong style="font-weight: bold;">Nro. de Cama:</strong> {{object.nro_cama}}</p>
+                        <p><strong style="font-weight: bold;">Paciente:</strong>
+                            {{object.id_historiaclinicaFK.id_pacienteFK.nombre}}
+                            {{object.id_historiaclinicaFK.id_pacienteFK.apellido_paterno}}
+                            {{object.id_historiaclinicaFK.id_pacienteFK.apellido_materno}}</p>
+                        <p><strong style="font-weight: bold;">Edad:</strong>
+                            {{object.id_historiaclinicaFK.id_pacienteFK.edad}}</p>
+                        <p><strong style="font-weight: bold;">Fecha Nacimiento:</strong>
+                            {{object.id_historiaclinicaFK.id_pacienteFK.fecha_nacimiento|date:"d-m-Y"}}</p>
+                    </div>
+                    <div class="col">
+                        <p><strong style="font-weight: bold;">Código HC:</strong>
+                            {{object.id_historiaclinicaFK.cod_historiaclinica}}</p>
+                        <p><strong style="font-weight: bold;">Fecha de Ingreso:</strong>
+                            {{object.id_historiaclinicaFK.fecha_ingresohospital|date:"d-m-Y H:i a"}}</p>
+                    </div>
+                </div>
+            </div>
+            <form method="POST">
+                <input type="hidden" name="action" value="indicacion_add">
+                <input type="hidden" name="id_evolucionFK" value="{{object.id_evolucionPK}}">
+                <input type="hidden" name="id_medicoFK" value="{{user.id_medicoPK}}">
+
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label class="bmd bmd-label-floating">Dieta</label>
+                            <textarea class="form-control" name="dieta" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="bmd bmd-label-floating">Terapia Respiratoria</label>
+                            <textarea class="form-control" name="terapia_respiratoria" rows="3" required></textarea>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <h3 class="row justify-content-center"><strong>Medidas Generales</strong></h3>
+                                <div class="table-responsive"
+                                    style="box-shadow: 0 0 5px transparent; border-radius: 15px;">
+                                    <table class="table table-hover" id="tblmedidasgeneral">
+                                        <div class="col-md-10">
+                                            <div class="form-group bmd-form-group">
+                                                <input type="text" class="form-control" id="medida"
+                                                    onkeyup="if(event.keyCode == 13) enviardatos()"
+                                                    placeholder="Ingrese los datos" />
+                                            </div>
+                                        </div>
+                                        <thead class="text-info text-center">
+                                            <tr style="max-width: 100%;">
+                                                <th class="th-sm" style="width: 30%;" scope="col">Nombre</th>
+                                                <th class="th-sm" scope="col">Descripción</th>
+                                                <th class="th-sm" scope="col">Quitar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="text-center">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <h3 class="row justify-content-center"><strong>Tratamiento</strong></h3>
+                                <div class="table-responsive"
+                                    style="box-shadow: 0 0 5px transparent; border-radius: 15px;">
+                                    <table class="table table-hover" id="tbltratamiento">
+                                        <div class="col-md-10">
+                                            <div class="form-group bmd-form-group">
+                                                <input type="text" name="buscador_medicamento" class="form-control"
+                                                    id="medicamento" placeholder="Ingrese el medicamento a solicitar" />
+                                            </div>
+                                        </div>
+                                        <thead class="text-info text-center">
+                                            <tr style="max-width: 100%;">
+                                                <th class="th-sm" scope="col">Medicamento</th>
+                                                <th class="th-sm" scope="col">Cantidad</th>
+                                                <th class="th-sm" scope="col">Descripción</th>
+                                                <th class="th-sm" scope="col">Indicación</th>
+                                                <th class="th-sm" scope="col">Via Admi.</th>
+                                                <th class="th-sm" scope="col">Quitar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="text-center">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <h3 class="row justify-content-center"><strong>Soluciones</strong></h3>
+                                <div class="table-responsive"
+                                    style="box-shadow: 0 0 5px transparent; border-radius: 15px;">
+                                    <table class="table table-hover" id="tblsolucion">
+                                        <div class="col-md-10">
+                                            <div class="form-group bmd-form-group">
+                                                <input type="text" name="buscador_solucion" class="form-control"
+                                                    id="medicamento" placeholder="Ingrese el medicamento a solicitar" />
+                                            </div>
+                                        </div>
+                                        <thead class="text-info text-center">
+                                            <tr style="max-width: 100%;">
+                                                <th class="th-sm" style="width: 30%;" scope="col">Nombre</th>
+                                                <th class="th-sm" scope="col">Descripción</th>
+                                                <th class="th-sm" style="width: 20%;" scope="col">Indicación</th>
+                                                <th class="th-sm" scope="col">Via Admi.</th>
+                                                <th class="th-sm" scope="col">Quitar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="text-center">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <h3 class="row justify-content-center"><strong>Complementarios</strong></h3>
+                                <div class="table-responsive"
+                                    style="box-shadow: 0 0 5px transparent; border-radius: 15px;">
+                                    <table class="table table-hover" id="tblsolicitudlab">
+                                        <div class="col-md-10">
+                                            <div class="form-group bmd-form-group">
+                                                <input type="text" class="form-control" id="solicitud"
+                                                    onkeyup="if(event.keyCode == 13) enviardatosSolicitud()"
+                                                    placeholder="Ingrese los datos" />
+                                            </div>
+                                        </div>
+                                        <thead class="text-info text-center">
+                                            <tr style="max-width: 100%;">
+                                                <th class="th-sm" scope="col">Descripción</th>
+                                                <th class="th-sm" scope="col">Fecha</th>
+                                                <th class="th-sm" style="width: 20%;" scope="col">Estado</th>
+                                                <th class="th-sm" style="width: 20%;" scope="col">Quitar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="text-center">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <input type="submit" class="btn btn-success" value="{{label_button}}">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+<script src="{% static 'assets/jquery-ui-1.12.1.custom/jquery-ui.min.js' %}"></script>
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('input[type=text]').forEach(node => node.addEventListener('keypress', e => {
+            if (e.keyCode == 13) {
+                e.preventDefault();
+            }
+        }))
+    });
+</script>
+<script>
+    var tblmedidasgeneral;
+    var tbltratamiento;
+    var tblsolucion;
+    var tblsolicitudlab;
+
+    var medidageneral_list = {
+        items: {
+            medidasg: []
+        },
+        add: function (item) {
+            this.items.medidasg.push(item);
+            this.list();
+        },
+        list: function () {
+            tblmedidasgeneral = $('#tblmedidasgeneral').DataTable({
+                "language": {
+                    "sEmptyTable": "Ningún dato disponible en esta tabla",
+                },
+                paging: false,
+                filter: false,
+                info: false,
+                autoWidth: false,
+                responsive: true,
+                destroy: true,
+                ordering: false,
+                data: this.items.medidasg,
+                columns: [
+                    { "data": "nombre" },
+                    { "data": "descripcion" },
+                ],
+                columnDefs: [
+                    {
+                        targets: [2],
+                        class: "text-center",
+                        orderable: false,
+                        render: function (data, type, row) {
+                            return '<a rel="remove" class="btn btn-danger btn-link btn-sm"><i class="material-icons">clear</i></a>';
+                        }
+                    },
+                    {
+                        targets: [1],
+                        class: 'text-center',
+                        orderable: false,
+                        render: function (data, type, row) {
+                            return '<input type="text" class="form-control" required name="descripcion" placeholder="Ingrese una descripción" value="' + row.descripcion + '">';
+                        }
+                    }
+                ],
+            });
+        },
+
+    };
+    var tratamiento_list = {
+        items: {
+            tratamiento: [],
+        },
+        add: function (item) {
+            this.items.tratamiento.push(item);
+            this.list();
+        },
+        list: function () {
+            tbltratamiento = $('#tbltratamiento').DataTable({
+                "language": {
+                    "sEmptyTable": "Ningún dato disponible en esta tabla",
+
+                },
+                paging: false,
+                filter: false,
+                info: false,
+                autoWidth: false,
+                responsive: true,
+                destroy: true,
+                ordering: false,
+                data: this.items.tratamiento,
+                columns: [
+                    { "data": "nombre" },
+                    { "data": "cant" },
+                    { "data": "descripcion" },
+                    { "data": "indicacion" },
+                    { "data": "via_admin" },
+                ],
+                columnDefs: [
+                    {
+                        targets: [1],
+                        class: 'text-center',
+                        orderable: false,
+                        render: function (data, type, row) {
+                            return '<input type="number" name="cant" class="form-control" required min="1" value="' + row.cant + '">';
+                        }
+                    },
+                    {
+                        targets: [2],
+                        class: 'text-center',
+                        orderable: false,
+                        render: function (data, type, row) {
+                            return '<input type="text" name="descripcion" class="form-control" placeholder="Ingrese una descripción" required value="' + row.descripcion + '">';
+                        }
+                    },
+                    {
+                        targets: [3],
+                        class: 'text-center',
+                        orderable: false,
+                        render: function (data, type, row) {
+                            return '<input type="text" name="indicacion" class="form-control" required value="' + row.indicacion + '">';
+                        }
+                    },
+                    {
+                        targets: [4],
+                        class: 'text-center',
+                        orderable: false,
+                        render: function (data, type, row) {
+                            return '<input type="text" name="via_admin" class="form-control" required maxlength="2" value="' + row.via_admin + '">';
+                        }
+                    },
+                    {
+                        targets: [5],
+                        class: "text-center",
+                        orderable: false,
+                        render: function (data, type, row) {
+                            return '<a rel="remove" class="btn btn-danger btn-link btn-sm"><i class="material-icons">clear</i></a>';
+                        }
+                    },
+                ],
+            })
+        },
+    };
+    var solucion_list = {
+        items: {
+            solucion: [],
+        },
+        add: function (item) {
+            this.items.solucion.push(item);
+            this.list();
+        },
+        list: function () {
+            tblsolucion = $('#tblsolucion').DataTable({
+                "language": {
+                    "sEmptyTable": "Ningún dato disponible en esta tabla",
+                },
+                paging: false,
+                filter: false,
+                info: false,
+                autoWidth: false,
+                responsive: true,
+                destroy: true,
+                ordering: false,
+                data: this.items.solucion,
+                columns: [
+                    { "data": "nombre" },
+                    { "data": "descripcion" },
+                    { "data": "indicacion" },
+                    { "data": "via_admin" },
+                ],
+                columnDefs: [
+                    {
+                        targets: [1],
+                        class: 'text-center',
+                        orderable: false,
+                        render: function (data, type, row) {
+                            return '<input type="text" name="descripcion"  class="form-control" required value="' + row.descripcion + '">';
+                        }
+                    },
+                    {
+                        targets: [2],
+                        class: 'text-center',
+                        orderable: false,
+                        render: function (data, type, row) {
+                            return '<input type="text" name="indicacion"  class="form-control" required value="' + row.indicacion + '">';
+                        }
+                    },
+                    {
+                        targets: [3],
+                        class: 'text-center',
+                        orderable: false,
+                        render: function (data, type, row) {
+                            return '<input type="text" name="via_admin" class="form-control" required maxlength="2" value="' + row.via_admin + '">';
+                        }
+                    },
+                    {
+                        targets: [4],
+                        class: "text-center",
+                        orderable: false,
+                        render: function (data, type, row) {
+                            return '<a rel="remove" class="btn btn-danger btn-link btn-sm"><i class="material-icons">clear</i></a>';
+                        }
+                    },
+                ],
+            });
+        },
+    };
+    var solicitudlab_list = {
+        items: {
+            solicitud: []
+        },
+        add: function (item) {
+            this.items.solicitud.push(item);
+            this.list();
+        },
+        list: function () {
+            tblsolicitudlab = $('#tblsolicitudlab').DataTable({
+                "language": {
+                    "sEmptyTable": "Ningún dato disponible en esta tabla",
+                },
+                paging: false,
+                filter: false,
+                info: false,
+                autoWidth: false,
+                responsive: true,
+                destroy: true,
+                ordering: false,
+                data: this.items.solicitud,
+                columns: [
+                    { "data": "descripcion" },
+                    { "data": "fecha_solicitud" },
+                    { "data": "estado" },
+                ],
+                columnDefs: [
+                    {
+                        targets: [0],
+                        class: 'text-center',
+                        orderable: false,
+                        render: function (data, type, row) {
+                            return '<input type="text" name="descripcion" class="form-control" required value="' + row.descripcion + '">';
+                        }
+                    },
+                    {
+                        targets: [1],
+                        class: 'text-center',
+                        orderable: false,
+                        render: function (data, type, row) {
+                            return '<input type="date" class="form-control datetimepicker" required name="fecha_solicitud" value="' + row.fecha_solicitud + '"/>';
+                        }
+                    },
+                    {
+                        targets: [3],
+                        class: "text-center",
+                        orderable: false,
+                        render: function (data, type, row) {
+                            return '<a rel="remove" class="btn btn-danger btn-link btn-sm"><i class="material-icons">clear</i></a>';
+                        }
+                    },
+                ],
+            });
+        },
+    }
+
+
+    function enviardatos() {
+        var medida = document.getElementById('medida');
+        var item = {
+            "nombre": "",
+            "descripcion": "",
+        };
+        item.nombre = medida.value;
+        item.descripcion = "";
+        medidageneral_list.add(item);
+        medida.value = "";
+    }
+    function enviardatosSolicitud() {
+        var solicitud = document.getElementById('solicitud');
+        var item = {
+            "descripcion": "",
+            "fecha_solicitud": "",
+            "estado": "En Curso",
+        };
+        item.descripcion = solicitud.value;
+        item.fecha_solicitud = "";
+        solicitudlab_list.add(item);
+        solicitud.value = "";
+    }
+
+
+    $('#tblmedidasgeneral tbody')
+        .on('click', 'a[rel="remove"]', function () {
+            var tr = tblmedidasgeneral.cell($(this).closest('td', 'li')).index();
+            medidageneral_list.items.medidasg.splice(tr.row, 1);
+            medidageneral_list.list();
+        })
+        .on('change', 'input[name="descripcion"]', function () {
+            var descripcion = $(this).val();
+            var tr = tblmedidasgeneral.cell($(this).closest('td,li')).index();
+            medidageneral_list.items.medidasg[tr.row].descripcion = descripcion;
+        })
+
+    $('#tbltratamiento tbody')
+        .on('click', 'a[rel="remove"]', function () {
+            var tr = tbltratamiento.cell($(this).closest('td', 'li')).index();
+            tratamiento_list.items.tratamiento.splice(tr.row, 1);
+            tratamiento_list.list();
+        })
+        .on('change', 'input[name="cant"]', function () {
+            var cant = $(this).val();
+            var tr = tbltratamiento.cell($(this).closest('td, li')).index();
+            tratamiento_list.items.tratamiento[tr.row].cant = cant;
+        })
+        .on('change', 'input[name="descripcion"]', function () {
+            var descripcion = $(this).val();
+            var tr = tbltratamiento.cell($(this).closest('td,li')).index();
+            tratamiento_list.items.tratamiento[tr.row].descripcion = descripcion;
+        })
+        .on('change', 'input[name="indicacion"]', function () {
+            var indicacion = $(this).val();
+            var tr = tbltratamiento.cell($(this).closest('td,li')).index();
+            tratamiento_list.items.tratamiento[tr.row].indicacion = indicacion;
+        })
+        .on('change', 'input[name="via_admin"]', function () {
+            var via_admin = $(this).val();
+            var tr = tbltratamiento.cell($(this).closest('td,li')).index();
+            tratamiento_list.items.tratamiento[tr.row].via_admin = via_admin;
+        });
+
+    $('#tblsolucion tbody')
+        .on('click', 'a[rel="remove"]', function () {
+            var tr = tblsolucion.cell($(this).closest('td', 'li')).index();
+            solucion_list.items.solucion.splice(tr.row, 1);
+            solucion_list.list();
+        })
+        .on('change', 'input[name="descripcion"]', function () {
+            var descripcion = $(this).val();
+            var tr = tblsolucion.cell($(this).closest('td,li')).index();
+            solucion_list.items.solucion[tr.row].descripcion = descripcion;
+        })
+        .on('change', 'input[name="indicacion"]', function () {
+            var indicacion = $(this).val();
+            var tr = tblsolucion.cell($(this).closest('td,li')).index();
+            solucion_list.items.solucion[tr.row].indicacion = indicacion;
+        })
+        .on('change', 'input[name="via_admin"]', function () {
+            var via_admin = $(this).val();
+            var tr = tblsolucion.cell($(this).closest('td,li')).index();
+            solucion_list.items.solucion[tr.row].via_admin = via_admin;
+        })
+
+    $('#tblsolicitudlab tbody')
+        .on('click', 'a[rel="remove"]', function () {
+            var tr = tblsolicitudlab.cell($(this).closest('td', 'li')).index();
+            solicitudlab_list.items.solicitud.splice(tr.row, 1);
+            solicitudlab_list.list();
+        })
+        .on('change', 'input[name="descripcion"]', function () {
+            var descripcion = $(this).val();
+            var tr = tblsolicitudlab.cell($(this).closest('td,li')).index();
+            solicitudlab_list.items.solicitud[tr.row].descripcion = descripcion;
+        })
+        .on('change', 'input[name="fecha_solicitud"]', function () {
+            var fecha_solicitud = $(this).val();
+            var tr = tblsolicitudlab.cell($(this).closest('td,li')).index();
+            solicitudlab_list.items.solicitud[tr.row].fecha_solicitud = fecha_solicitud;
+        })
+
+    $(function () {
+        $('input[name="buscador_medicamento"]').autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: window.location.pathname,
+                    type: 'POST',
+                    data: {
+                        'action': 'search_medicamentos',
+                        'term': request.term,
+                    },
+                    dataType: 'json',
+                }).done(function (data) {
+                    response(data);
+                }).fail(function (data) {
+                });
+            },
+            delay: 500,
+            minLength: 1,
+            select: function (event, ui) {
+                event.preventDefault();
+                ui.item.cant = 1;
+                ui.item.descripcion = "";
+                ui.item.indicacion = "";
+                ui.item.via_admin = "";
+                tratamiento_list.add(ui.item);
+                $(this).val('');
+            },
+        });
+    });
+
+    $(function () {
+        $('input[name="buscador_solucion"]').autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: window.location.pathname,
+                    type: 'POST',
+                    data: {
+                        'action': 'search_solucion',
+                        'term': request.term,
+                    },
+                    dataType: 'json',
+                }).done(function (data) {
+                    response(data);
+                }).fail(function (data) {
+                });
+            },
+            delay: 500,
+            minLength: 1,
+            select: function (event, ui) {
+                event.preventDefault();
+                ui.item.descripcion = "";
+                ui.item.indicacion = "";
+                ui.item.via_admin = "";
+                solucion_list.add(ui.item);
+                $(this).val('');
+            },
+        });
+    });
+
+    $('form').on('submit', function (e) {
+        e.preventDefault();
+        var parameters = new FormData();
+        parameters.append('action', $('input[name="action"]').val());
+        parameters.append('id_evolucionFK', $('input[name="id_evolucionFK"]').val());
+        parameters.append('id_medicoFK', $('input[name="id_medicoFK"]').val());
+
+        parameters.append('dieta', $('textarea[name="dieta"]').val());
+        parameters.append('terapia_respiratoria', $('textarea[name="terapia_respiratoria"]').val());
+
+        parameters.append('medidageneral_list', JSON.stringify(medidageneral_list.items));
+        parameters.append('tratamiento_list', JSON.stringify(tratamiento_list.items));
+        parameters.append('solucion_list', JSON.stringify(solucion_list.items));
+        parameters.append('solicitudlab_list', JSON.stringify(solicitudlab_list.items));
+
+        $.ajax({
+            url: window.location.pathname,
+            type: 'POST',
+            data: parameters,
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+        }).done(function (data) {
+            window.location.href = '/indicacion/detalle/' + data.id
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+        }).always(function (data) {
+
+        });
+    })
+</script>
+{% endblock javascripts %}

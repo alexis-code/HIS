@@ -1,0 +1,497 @@
+{% extends 'hospitalapp/base.html' %}
+{% load static %}
+{% block title %}
+Epicrisis|Crear
+{% endblock title %}
+{% block content %}
+
+<style type="text/css">
+    .ocultar {
+        display: none;
+    }
+</style>
+<div class="row justify-content-center">
+    <div class="col-sm-12 col-md-12">
+        <!-- Cabecera -->
+        <div class="row justify-content-center">
+            <div class="card" style="width: 50rem;">
+                <div class="card-header card-header-success">
+                    <h4 class="card-title"><strong>Cod. HC:</strong>
+                        {{object.id_historiaclinicaFK.cod_historiaclinica}}</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <p><strong>Paciente:</strong><br> {{ object.id_historiaclinicaFK.id_pacienteFK.nombre }}
+                                {{object.id_historiaclinicaFK.id_pacienteFK.apellido_paterno }}
+                                {{object.id_historiaclinicaFK.id_pacienteFK.apellido_materno }}</p>
+                        </div>
+                        <div class="col">
+                            <p><strong>Edad:</strong><br> {{object.id_historiaclinicaFK.id_pacienteFK.edad}} años</p>
+                        </div>
+                        <div class="col">
+                            <p><strong>Nro. Documento:</strong><br>
+                                {{object.id_historiaclinicaFK.id_pacienteFK.nro_documento}}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p><strong>Total de Días en Area:</strong><br /> {{diasArea}}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p><strong>Antecedentes:</strong><br /> {{object.id_historiaclinicaFK.antecedente}}</p>
+                        </div>
+                        <div class="col">
+                            <p><strong>Diagnóstico de la última evolución:</strong><br />
+                                {{object.diagnostico_evolucion}}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label class="bmd-label-floating">Referido del Centro:</label>
+                            <input type="text" class="form-control" name="referido_centro" required>
+                        </div>
+                        <div class="col">
+                            <label class="bmd-label-floating">Red:</label>
+                            <input type="text" class="form-control" name="red" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <!--Datos del Laboratorio-->
+        <div class="row justify-content-center">
+            <div class="card" style="width: 50rem">
+                <div class="card-header">
+                    <h3 style="text-align: center;">Datos del Ultimo Laboratorio Realizado</h3>
+                </div>
+                <hr>
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="form-group col-md-2">
+                            <label class="bmd-label-floating">GB</label>
+                            <input type="text" class="form-control" name="lab_gb"
+                                value="{{ object.id_resultadolabFK.lab_gb}}" readonly />
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="bmd-label-floating">HB</label>
+                            <input type="text" class="form-control" name="lab_hb"
+                                value="{{ object.id_resultadolabFK.lab_hb}}" readonly />
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="bmd-label-floating">PH</label>
+                            <input type="text" class="form-control" name="lab_ph"
+                                value="{{ object.id_resultadolabFK.lab_ph}}" readonly />
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="bmd-label-floating">GOT</label>
+                            <input type="text" class="form-control" name="lab_got"
+                                value="{{ object.id_resultadolabFK.lab_got}}" readonly />
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="bmd-label-floating">NEU</label>
+                            <input type="text" class="form-control" name="lab_neu"
+                                value="{{ object.id_resultadolabFK.lab_neu}}" readonly />
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="bmd-label-floating">HTCO</label>
+                            <input type="text" class="form-control" name="lab_htco"
+                                value="{{ object.id_resultadolabFK.lab_htco}}" readonly />
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-2">
+                            <label class="bmd-label-floating">PCO<sub>2</sub></label>
+                            <input type="text" class="form-control" name="lab_pco"
+                                value="{{ object.id_resultadolabFK.lab_pco}}" readonly />
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="bmd-label-floating">GPT</label>
+                            <input type="text" class="form-control" name="lab_gpt"
+                                value="{{ object.id_resultadolabFK.lab_gpt}}" readonly />
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="bmd-label-floating">LIN</label>
+                            <input type="text" class="form-control" name="lab_lin"
+                                value="{{ object.id_resultadolabFK.lab_lin}}" readonly />
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="bmd-label-floating">CR</label>
+                            <input type="text" class="form-control" name="lab_cr"
+                                value="{{ object.id_resultadolabFK.lab_cr}}" readonly />
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="bmd-label-floating">HCO<sub>3</sub></label>
+                            <input type="text" class="form-control" name="lab_hco"
+                                value="{{ object.id_resultadolabFK.lab_hco}}" readonly />
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="bmd-label-floating">PT</label>
+                            <input type="text" class="form-control" name="lab_pt"
+                                value="{{ object.id_resultadolabFK.lab_pt}}" readonly />
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-2">
+                            <label class="bmd-label-floating">CAY</label>
+                            <input type="text" class="form-control" name="lab_cay"
+                                value="{{ object.id_resultadolabFK.lab_cay}}" readonly />
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="bmd-label-floating">UREA</label>
+                            <input type="text" class="form-control" name="lab_urea"
+                                value="{{ object.id_resultadolabFK.lab_urea}}" readonly />
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="bmd-label-floating">ALB</label>
+                            <input type="text" class="form-control" name="lab_alb"
+                                value="{{ object.id_resultadolabFK.lab_alb}}" readonly />
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="bmd-label-floating">PO<sub>2</sub></label>
+                            <input type="text" class="form-control" name="lab_po"
+                                value="{{ object.id_resultadolabFK.lab_po}}" readonly />
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="bmd-label-floating">PLQ</label>
+                            <input type="text" class="form-control" name="lab_plq"
+                                value="{{ object.id_resultadolabFK.lab_plq}}" readonly />
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="bmd-label-floating">NA</label>
+                            <input type="text" class="form-control" name="lab_na"
+                                value="{{ object.id_resultadolabFK.lab_na}}" readonly />
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-2">
+                            <label class="bmd-label-floating">EB</label>
+                            <input type="text" class="form-control" name="lab_eb"
+                                value="{{ object.id_resultadolabFK.lab_eb}}" readonly />
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="bmd-label-floating">CL</label>
+                            <input type="text" class="form-control" name="lab_cl"
+                                value="{{ object.id_resultadolabFK.lab_cl}}" readonly />
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="bmd-label-floating">K</label>
+                            <input type="text" class="form-control" name="lab_k"
+                                value="{{ object.id_resultadolabFK.lab_k}}" readonly />
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="bmd-label-floating">LACT</label>
+                            <input type="text" class="form-control" name="lab_lact"
+                                value="{{ object.id_resultadolabFK.lab_lact}}" readonly />
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="bmd-label-floating">DD</label>
+                            <input type="text" class="form-control" name="lab_dd"
+                                value="{{ object.id_resultadolabFK.lab_dd}}" readonly />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Datos de la epicrisis -->
+        <div class="row justify-content-center">
+            <form method="POST">
+                <input type="hidden" name="action" value="epicrisis_add">
+                <input type="hidden" name="id_evolucionFK" value="{{object.id_evolucionPK}}">
+                <input type="hidden" name="id_medicoFK" value="{{user.id_medicoPK}}">
+                <input type="hidden" name="total_dias" value="{{diasArea}}">
+                <div class="card" style="width: 50rem;">
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label>DIAGNOSTICO DE EGRESO*:</label>
+                                <div class="table-responsive"
+                                    style="box-shadow: 0 0 5px transparent; border-radius: 15px;">
+                                    <table class="table table-hover" id="tbldiagnostico">
+                                        <div class="col-md-10">
+                                            <div class="form-row">
+                                                <div class="form-group col-md-4">
+                                                    <input type="text" name="buscador_cie" class="form-control"
+                                                        placeholder="Ingrese el código CIE-10" />
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <input type="text" name="buscador_diagnostico" class="form-control"
+                                                        placeholder="Ingrese el diagnostico" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <thead class="text-info">
+                                            <tr style="max-width: 100%;">
+                                                <th class="th-sm" scope="col">Diagnóstico Egreso</th>
+                                                <th class="th-sm" scope="col">Código CIE-10</th>
+                                                <th class="th-sm" scope="col">Quitar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label>Procedimientos Mayores*:</label>
+                                <textarea class="form-control" name="proc_mayores" rows="5" required> </textarea>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Resúmen de la Evolución Hospitalaria*:</label>
+                                <textarea class="form-control" name="resumen_evolucion" rows="5" required> </textarea>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label>Complicaciones*:</label>
+                                <textarea class="form-control" name="complicaciones" rows="4" required></textarea>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label>Intervenciones*:</label>
+                                <textarea class="form-control" name="intervenciones" rows="4" required></textarea>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label>Estudios Diagnosticos*:</label>
+                                <textarea class="form-control" name="estudios" rows="4" required></textarea>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="form-row">
+                            <div class="form-group col-md-10">
+                                <label>Estudio de Imágenes*:</label>
+                                <textarea class="form-control" name="estudio_imagenes" rows="5" required> </textarea>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                                <label>Condición del alta:*</label>
+                                <select class="form-control" name="condicion_alta">
+                                    <option value="Mejorado">Mejorado</option>
+                                    <option value="Igual">Igual</option>
+                                    <option value="Peor">Peor</option>
+                                    <option value="Obito">Óbito</option>
+                                </select>
+
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label>Contra Referido:*</label>
+                                <select class="form-control" name="contra_referido">
+                                    <option value="Si">Si</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                                <label>Motivo del alta:*</label>
+                                <select id="motivo" class="form-control" name="motivo_alta">
+                                    <option value="Medica">Médica</option>
+                                    <option value="Solicitada">Solicitada</option>
+                                    <option value="Transferencia">Transferencia</option>
+                                    <option value="Otros">Otros</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-5">
+                                <input type="text" id="motivo_descrip" class="form-control txtmotivo ocultar"
+                                    name="motivo_descripcion" placeholder="Introdusca el motivo de alta">
+                            </div>
+                        </div>
+                        <br>
+                        <div class="form-row">
+                            <div class="form-group col-md-10">
+                                <label>Plan de Tratamiento al alta/ cuidados/recomendaciones vigilancia/problemas
+                                    clínicos pendientes:</label>
+                                <textarea class="form-control" name="plan" rows="4" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <input type="submit" class="btn btn-success" value="Registrar">
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+{% block javascripts %}
+<script src="{% static 'assets/jquery-ui-1.12.1.custom/jquery-ui.min.js' %}"></script>
+<script type="text/javascript">
+
+    var diagnostico_list = {
+        items: {
+            diagnosticos: [],
+        },
+        add: function (item) {
+            this.items.diagnosticos.push(item);
+            this.list();
+        },
+        list: function () {
+            tbldiagnostico = $('#tbldiagnostico').DataTable({
+                "language": {
+                    "sEmptyTable": "Ningún dato disponible en esta tabla",
+
+                },
+                paging: false,
+                filter: false,
+                info: false,
+                autoWidth: false,
+                responsive: true,
+                destroy: true,
+                ordering: false,
+                data: this.items.diagnosticos,
+                columns: [
+                    { "data": "diagnostico" },
+                    { "data": "codigo_cie" },
+                ],
+                columnDefs: [
+                    {
+                        targets: [2],
+                        class: "text-center",
+                        orderable: false,
+                        render: function (data, type, row) {
+                            return '<a rel="remove" class="btn btn-danger btn-link btn-sm"><i class="material-icons">clear</i></a>';
+                        }
+                    },
+                ],
+            })
+        },
+    };
+
+    $(function () {
+        $('input[name="buscador_cie"]').autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: window.location.pathname,
+                    type: 'POST',
+                    data: {
+                        'action': 'search_cie',
+                        'term': request.term,
+                    },
+                    dataType: 'json',
+                }).done(function (data) {
+                    response(data);
+                    console.log(data);
+                }).fail(function (data) {
+                    console.log('error');
+                });
+            },
+            delay: 500,
+            minLength: 1,
+            select: function (event, ui) {
+                event.preventDefault();
+                diagnostico_list.add(ui.item);
+                $(this).val('');
+            },
+        });
+    });
+    $(function () {
+        $('input[name="buscador_diagnostico"]').autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: window.location.pathname,
+                    type: 'POST',
+                    data: {
+                        'action': 'search_diagnostico',
+                        'term': request.term,
+                    },
+                    dataType: 'json',
+                }).done(function (data) {
+                    response(data);
+                    console.log(data);
+                }).fail(function (data) {
+                    console.log('error');
+                });
+            },
+            delay: 500,
+            minLength: 1,
+            select: function (event, ui) {
+                event.preventDefault();
+                diagnostico_list.add(ui.item);
+                $(this).val('');
+            },
+        });
+    });
+
+    $('#tbldiagnostico tbody')
+        .on('click', 'a[rel="remove"]', function () {
+            var tr = tbldiagnostico.cell($(this).closest('td', 'li')).index();
+            diagnostico_list.items.diagnosticos.splice(tr.row, 1);
+            diagnostico_list.list();
+        })
+
+    $('form').on('submit', function (e) {
+        e.preventDefault();
+        var parameters = new FormData();
+        parameters.append('action', $('input[name="action"]').val());
+        //parametros para epicrisis
+        parameters.append('id_evolucionFK', $('input[name="id_evolucionFK"]').val());
+        parameters.append('id_medicoFK', $('input[name="id_medicoFK"]').val());
+        parameters.append('total_dias', $('input[name="total_dias"]').val())
+        parameters.append('diagnostico_egreso', $('textarea[name="diagnostico_egreso"]').val());
+        parameters.append('proc_mayores', $('textarea[name="proc_mayores"]').val());
+        parameters.append('resumen_evolucion', $('textarea[name="resumen_evolucion"]').val());
+        parameters.append('complicaciones', $('textarea[name="complicaciones"]').val());
+        parameters.append('intervenciones', $('textarea[name="intervenciones"]').val());
+        parameters.append('estudios', $('textarea[name="estudios"]').val());
+        parameters.append('estudio_imagenes', $('textarea[name="estudio_imagenes"]').val());
+        parameters.append('condicion_alta', $('select[name="condicion_alta"]').val());
+        parameters.append('contra_referido', $('select[name="contra_referido"]').val());
+        parameters.append('motivo_alta', $('select[name="motivo_alta"]').val());
+        if ($('input[name="motivo_descripcion"]').val() != "") {
+            parameters.append('motivo_descripcion', $('input[name="motivo_descripcion"]').val());
+        }
+        parameters.append('plan', $('textarea[name="plan"]').val());
+        parameters.append('referido_centro', $('input[name="referido_centro"]').val());
+        parameters.append('red', $('input[name="red"]').val());
+        parameters.append('diagnostico', JSON.stringify(diagnostico_list.items));
+
+        $.ajax({
+            url: window.location.pathname,
+            type: 'POST',
+            data: parameters,
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+        }).done(function (data) {
+            window.location.href = '/epicrisis/detalle/' + data.id
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+        }).always(function (data) {
+        });
+    });
+</script>
+<script type="text/javascript">
+    $('#motivo').change(function () {
+        var motivo = $(this).val();
+        document.getElementById('motivo_descrip').value = "";
+
+        if (motivo == 'Medica') {
+            $('.txtmotivo').addClass('ocultar');
+        }
+        if (motivo == 'Solicitada') {
+            $('.txtmotivo').addClass('ocultar');
+        }
+        if (motivo == 'Transferencia') {
+            $('.txtmotivo').addClass('ocultar');
+        }
+
+        if (motivo == 'Otros') {
+            $('.txtmotivo').removeClass('ocultar');
+        }
+    });
+</script>
+{% endblock javascripts %}

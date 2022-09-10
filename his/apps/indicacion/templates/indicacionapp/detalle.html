@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indicacion|Detalle</title>
+    <!-- Material Kit CSS -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,600,700,800" rel="stylesheet" />
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+    <!-- Nucleo Icons -->
+    <link href="{% static 'assets/css/nucleo-icons.css' %}" rel="stylesheet" />
+    <!-- CSS Files -->
+    <link href="{% static 'assets/css/black-dashboard.css' %}" rel="stylesheet" />
+    <link href="{% static 'assets/datatable/datatables.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'assets/jquery-ui-1.12.1.custom/jquery.css' %}" rel="stylesheet" />
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link href="{% static 'assets/css/micss.css' %}" rel="stylesheet" />
+
+    <style>
+        html,
+        body {
+            width: auto;
+            background-color: white;
+        }
+
+        #customers {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #customers th {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body class="white-content">
+    <div class="card">
+        <div class="row justify-content-center">
+            <div class="col-sm text-center">
+                <img src="{% static 'assets/img/logo-gobernacion.png' %}" alt="logo" width="90px;" />
+            </div>
+            <div class="col-sm text-center">
+                <h3 class="mt-2">Indicacion Clinica</h3>
+            </div>
+            <div class="col-sm text-center">
+                <a href="/indicacion/index/{{indicacion.id_evolucionFK_id}}">
+                    <img src="{% static 'assets/img/logo-his.png' %}" alt="logo" width="60px;" />
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row justify-content-center">
+                <div class="col-sm text-center">
+                    <p><strong style="font-weight: bold;">Cama:</strong> {{indicacion.id_evolucionFK.nro_cama}}</p>
+                </div>
+                <div class="col-sm text-center">
+                    <p><strong style="font-weight: bold;">Fecha:</strong> {{indicacion.fecha_indicacion|date:"d-m-Y"}}</p>
+                </div>
+                <div class="col-sm text-center">
+                    <p><strong style="font-weight: bold;">Historia Clinica:</strong>
+                        {{indicacion.id_evolucionFK.id_historiaclinicaFK.cod_historiaclinica }}</p>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-sm text-center">
+                    <p><strong style="font-weight: bold;">Nombre y Apellido:</strong>
+                        {{indicacion.id_evolucionFK.id_historiaclinicaFK.id_pacienteFK.nombre }}
+                        {{indicacion.id_evolucionFK.id_historiaclinicaFK.id_pacienteFK.apellido_paterno }}
+                        {{indicacion.id_evolucionFK.id_historiaclinicaFK.id_pacienteFK.apellido_materno }}</p>
+                </div>
+                <div class="col-sm-2 text-center">
+                    <p><strong style="font-weight: bold;">Edad:</strong>
+                        {{indicacion.id_evolucionFK.id_historiaclinicaFK.id_pacienteFK.edad }}</p>
+                </div>
+                <div class="col-sm text-center">
+                    <p><strong style="font-weight: bold;">FN:</strong>
+                        {{indicacion.id_evolucionFK.id_historiaclinicaFK.id_pacienteFK.fecha_nacimiento|date:"d-m-Y" }}</p>
+                </div>
+                <div class="col-sm text-center">
+                    <p><strong style="font-weight: bold;">FI:</strong> {{indicacion.id_evolucionFK.fecha_hora|date:"d-m-Y H:i a"}}</p>
+                </div>
+            </div>
+            <hr />
+            <div class="row justify-content-center">
+                <div class="col-sm-10 col-md-10 text-left">
+                    <ol>
+                        <span style="font-weight: bold;">DIETA</span>
+                        <li style="text-align: left;">{{indicacion.dieta}}</li>
+                        <hr>
+                        <span style="font-weight:bold;">MEDIDAS GENERALES</span>
+                        <table id="customers">
+                            <thead>
+                                <tr>
+                                    <th class="text-left">Nombre</th>
+                                    <th class="text-left">Descripción</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-left">
+                                {% for d in indicacion.det_indicacion_medida_general_set.all %}
+                                <tr>
+                                    <td>
+                                        <li>{{ d.id_medida_generalFK.nombre }}</li>
+                                    </td>
+                                    <td>{{ d.id_medida_generalFK.descripcion }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <hr>
+                        <span style="font-weight:bold;">TERAPIA RESPIRATORIA</span>
+                        <li>{{indicacion.terapia_respiratoria}}</li>
+                        <hr>
+                        <span style="font-weight:bold;">TRATAMIENTO</span>
+                        <table id="customers">
+                            <thead>
+                                <tr>
+                                    <th class="text-left">Medicamento</th>
+                                    <th class="text-left">Cantidad</th>
+                                    <th class="text-left">Descripción</th>
+                                    <th class="text-left">Indicacion</th>
+                                    <th class="text-left">Via Admi.</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-left">
+                                {% for d in indicacion.det_tratamiento_indicacion_set.all %}
+                                <tr>
+                                    <td>
+                                        <li>{{ d.id_medicamentoFK.nombre }}</li>
+                                    </td>
+                                    <td> {{ d.cantidad }}</td>
+                                    <td>{{ d.descripcion }}</td>
+                                    <td>{{ d.indicacion }}</td>
+                                    <td>{{ d.via_admin }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <hr>
+                        <span style="font-weight: bold;">SOLUCIONES</span>
+                        <table id="customers">
+                            <thead>
+                                <tr>
+                                    <th class="text-left">Nombre</th>
+                                    <th class="text-left">Descripción</th>
+                                    <th class="text-left">Indicación</th>
+                                    <th class="text-left">Via Admi.</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-left">
+                                {% for d in indicacion.det_solucion_set.all %}
+                                <tr>
+                                    <td>
+                                        <li>{{ d.id_medicamentoFK.nombre }}</li>
+                                    </td>
+                                    <td>{{ d.descripcion }}</td>
+                                    <td>{{ d.indicacion }}</td>
+                                    <td>{{ d.via_admin }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <hr>
+                        <span style="font-weight: bold;">COMPLEMENTARIOS</span>
+                        <table id="customers">
+                            <thead>
+                                <tr>
+                                    <th class="text-left">Descripción</th>
+                                    <th class="text-left">Estado</th>
+                                    <th class="text-left">Fecha Solicitud</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-left">
+                                {% for d in indicacion.det_solicitud_indicacion_set.all %}
+                                <tr>
+                                    <td>
+                                        <li>{{ d.id_solicitud_laboratioFK.descripcion }}</li>
+                                    </td>
+                                    <td>{{ d.id_solicitud_laboratioFK.estado }}</td>
+                                    <td>{{ d.fecha_solicitud }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <hr>
+                    </ol>
+                </div>
+                <div class="col-sm text-center" style="border-left: 1px solid rgba(0, 0, 0, 0.1)">
+                    <h5 style="font-weight: bold;">Control</h5>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="stats">
+                {{direccion}} - {{ciudad}}
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

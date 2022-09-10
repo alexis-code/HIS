@@ -1,0 +1,184 @@
+{% extends 'hospitalapp/base.html' %}
+{% block title %}
+Reporte - Cardex
+{% endblock %}
+{% block content %}
+<div class="container">
+    {% if messages %}
+    <div class="row">
+        <div class="col">
+            {% for message in messages %}
+            {% if message.tags == "error" %}
+            <div class="alert alert-danger fade show" role="alert">
+                {% else %}
+                <div class="alert alert-success fade show" role="alert">
+                    {% endif %}
+                    <strong>{{message}}</strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <i class="tim-icons icon-simple-remove"></i>
+                    </button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        <div class="row">
+            <div class="col-sm-3">
+                <input type="number" name="buscador_historia" class="form-control" id="historia_clinica"
+                    placeholder="Ingrese el código HC a buscar" />
+            </div>
+            <div class="col-sm-2">
+                <button class="btn btn-success btn-sm" onclick="buscar_historia()">Buscar</button>
+            </div>
+            <div class="col-sm-3">
+                <input type="number" name="buscador_ci" class="form-control" id="ci"
+                    placeholder="Ingrese el nro de documento" />
+            </div>
+            <div class="col-sm-2">
+                <button class="btn btn-success btn-sm" onclick="buscar_historiaByCi()">Buscar</button>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            {% for historia in object_list %}
+            <div class="col-md-4">
+                <div class="card">
+                    {% if historia.estado == 'Activo' %}
+                    <div class="card-header">
+                        <div class="float-right">
+                            <span class="badge badge-pill badge-success" title="Activo"><i
+                                    class="tim-icons icon-check-2"></i></span>
+                        </div>
+                        <h4 class="card-title"><strong style="font-weight: bold;">Cod. HC:</strong>
+                            {{historia.cod_historiaclinica }}</h4>
+                    </div>
+                    {%elif historia.estado == 'Inactivo' %}
+                    <div class="card-header">
+                        <div class="float-right">
+                            <span class="badge badge-pill badge-danger" title="Inactiva"><i
+                                    class="tim-icons icon-simple-remove"></i></span>
+                        </div>
+                        <h4 class="card-title"><strong style="font-weight: bold;">Cod. HC:</strong>
+                            {{historia.cod_historiaclinica }}</h4>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <p class="card-title">
+                            <strong style="font-weight: bold;">Paciente:</strong> {{historia.id_pacienteFK.nombre }}
+                            {{historia.id_pacienteFK.apellido_paterno}}
+                            {{historia.id_historiaclinicaFK.id_pacienteFK.apellido_materno}}
+                        </p>
+                        <p class="card-title"><strong style="font-weight: bold;">Edad:</strong>
+                            {{historia.id_pacienteFK.edad}}</p>
+                        <p class="card-title"><strong style="font-weight: bold;">Fecha de Ingreso:</strong>
+                            {{historia.fecha_ingresohospital|date:"d-m-Y H:i a"}}</p>
+                        <p>
+                            <strong style="font-weight: bold;">Dr(a):</strong>: {{historia.id_medicoFK.first_name }}
+                            {{historia.id_medicoFK.last_name }}
+                        </p>
+                        <p>
+                            <strong style="font-weight: bold;">Último en Modificar:</strong>:
+                            {{historia.medico_updated}}
+                        </p>
+                        <hr>
+                        <div class="card-footer text-right">
+                            <a href="javascript:cambiar_estado({{historia.id_historiaPK}})" rel="tooltip"
+                                data-placement="bottom" title="Cambiar Estado"><i class="material-icons"
+                                    style="font-size: 30px; color: darkcyan;">autorenew</i></a>
+                            </a>
+                            <a href="/historia/detalle/{{ historia.id_historiaPK }}" rel="tooltip"
+                                data-placement="bottom" title="Generar Detalle"><i class="material-icons"
+                                    style="font-size: 30px; color: darkcyan;">receipt_long</i></a>
+                            <a href="/evolucion/index/evoluciones/{{ historia.id_historiaPK }}" rel="tooltip"
+                                data-placement="bottom" title="Evoluciones"><i class="material-icons"
+                                    style="font-size: 30px; color: darkcyan;">visibility</i></a>
+                            <a href="/reportes/cardex/epicrisis/{{ historia.id_historiaPK }}" rel="tooltip"
+                                data-placement="bottom" title="Epicrisis"><i class="material-icons"
+                                    style="font-size: 30px; color: darkcyan;">grading</i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <i class="tim-icons icon-simple-remove"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                        <a href="javascript:cambiar_estado({{historia.id_historiaPK}})" class="btn btn-secondary"
+                            data-dismiss="modal">Confirmar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">&laquo; anterior</a>
+                {% endif %}
+
+                <span class="current">
+                    Pagina {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">siguiente &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+    {% endblock %}
+    {% block javascripts %}
+    <script>
+        function buscar_historia() {
+            codigo = document.getElementById('historia_clinica').value
+            window.location.href = '/reportes/cardex/codigo/' + codigo
+        }
+    </script>
+    <script>
+        function buscar_historiaByCi() {
+            ci = document.getElementById('ci').value
+            window.location.href = '/reportes/cardex/paciente/' + ci
+        }
+    </script>
+    <script>
+        function cambiar_estado(id) {
+            $.confirm({
+                title: 'Cambiar Estado!',
+                content: 'Desea confirmar?',
+                buttons: {
+                    confirmar: {
+                        btnClass: 'btn-success',
+                        action: function () {
+                            $.ajax({
+                                type: 'POST',
+                                url: "{% url 'cambiarestadoHC' %}",
+                                data: {
+                                    "csrfmiddlewaretoken": "{{ csrf_token }}",
+                                    "pk": id,
+                                },
+                                success: function (response) {
+                                    location.reload();
+                                }
+                            });
+                        }
+
+                    },
+                    cancelar: {
+                        btnClass: 'btn-danger',
+                    },
+                }
+            });
+        }
+    </script>
+    {% endblock javascripts %}
