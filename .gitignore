@@ -3,7 +3,6 @@
 *.pyc
 *.env
 *.config
-manage.py
 apps/HospitalApp/templates/includes/footer.html
 __pycache__
 db.sqlite3
