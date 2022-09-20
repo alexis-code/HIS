@@ -6,26 +6,37 @@ Historia Clínica - Lista
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-md-2">
-            <input type="number" name="buscador_historia" class="form-control bg-white" id="historia_clinica"
-                placeholder="Código H.C." />
+        <div class="col-md-5">
+            <form>
+                <div class="row">
+                    <div class="col">
+                        <input type="number" name="buscador_historia" class="form-control bg-white" id="historia_clinica"
+                        placeholder="Código H.C." required />
+                    </div>
+                    
+                    <div class="col">
+                        <button class="btn btn-default btn-sm" onclick="buscar_historia()">Buscar</button>
+                    </div>
+                </div>
+            </form>
         </div>
         <div class="col">
-            <button class="btn btn-default btn-sm" onclick="buscar_historia()">Buscar</button>
+            <form action="/historia/index/byfecha" method="get">
+                <div class="row">
+                    <span>Desde:</span>
+                    <div class="col">
+                        <input type="date" name="fecha_desde" class="form-control bg-white" id="fecha_desdehc" required />
+                    </div>
+                    <span>Hasta:</span>
+                    <div class="col">
+                        <input type="date" name="fecha_hasta" class="form-control bg-white" id="fecha_hastahc" required />
+                    </div>
+                    <div class="col">
+                        <button type="submit" class="btn btn-default btn-sm">Buscar</button>
+                    </div>
+                </div>
+            </form>
         </div>
-        <form action="/historia/index/byfecha" method="get">
-            <div class="row">
-                <div class="col">
-                    <input type="date" name="fecha_desde" class="form-control bg-white" id="fecha_desdehc" required />
-                </div>
-                <div class="col">
-                    <input type="date" name="fecha_hasta" class="form-control bg-white" id="fecha_hastahc" required />
-                </div>
-                <div class="col">
-                    <button type="submit" class="btn btn-default btn-sm">Buscar</button>
-                </div>
-            </div>
-        </form>
     </div>
     <br>
     <div class="row">
@@ -127,8 +138,12 @@ Historia Clínica - Lista
     {% block javascripts %}
     <script>
         function buscar_historia() {
-            codigo = document.getElementById('historia_clinica').value
-            window.location.href = '/historia/index/' + codigo
+            const input_cod = document.getElementById("historia_clinica")
+            if (input_cod.value != ""){
+                codigo = document.getElementById('historia_clinica').value
+                window.location.href = '/historia/index/' + codigo
+            }
+           
         }
         function buscar_historiabyFecha() {
             fecha_desde = document.getElementById("fecha_desdehc").value

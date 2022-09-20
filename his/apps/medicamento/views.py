@@ -37,9 +37,9 @@ class CreateMedicamento(LoginRequiredMixin,PermissionRequiredMixin,CreateView):
             action = request.POST['action']
             form = MedicamentoForms(request.POST)
             if action == "medicamento_add":
-                if form.is_valid():
+                if request.POST['nombre'].strip() != "" and request.POST['medida'].strip != "":
                     medicamento = Medicamento()
-                    medicamento.nombre = request.POST['nombre'] 
+                    medicamento.nombre = request.POST['nombre']
                     medicamento.medida = request.POST['medida']
                     medicamento.estado = "Activo"
                     medicamento.save()
@@ -47,6 +47,7 @@ class CreateMedicamento(LoginRequiredMixin,PermissionRequiredMixin,CreateView):
                     messages.error(self.request,"Error al registrar el medicamento, verifique la información a registrar")
         except Exception as e:
             data['error'] = 'Error al procesar la solicitud: ' + str(e)
+            messages.error(self.request,"Error al procesar la solicitud")
             print(data['error'])
         return redirect("ListaMedicamento") 
     
@@ -74,13 +75,17 @@ class UpdateMedicamento(LoginRequiredMixin,PermissionRequiredMixin,UpdateView):
         try:
             action = request.POST['action']
             if action == 'medicamento_edit':
-                medicamento = Medicamento.objects.get(pk = self.get_object().id_medicamentoPK)
-                medicamento.nombre = request.POST['nombre'] 
-                medicamento.medida = request.POST['medida']
-                medicamento.estado = 'Activo'
-                medicamento.save()
+                if request.POST['nombre'].strip() != "" and request.POST['medida'].strip() != "":
+                    medicamento = Medicamento.objects.get(pk = self.get_object().id_medicamentoPK)
+                    medicamento.nombre = request.POST['nombre'] 
+                    medicamento.medida = request.POST['medida']
+                    medicamento.estado = 'Activo'
+                    medicamento.save()
+                else:
+                    messages.error(self.request,"Error al modificar el medicamento, verifique la información a registrar")
         except Exception as e:
             data['error'] = str(e)
+            messages.error(self.request,"Error al procesar la solicitud")
             print(str(e))
         return redirect("ListaMedicamento")
 

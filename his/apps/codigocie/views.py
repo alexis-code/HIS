@@ -1,3 +1,4 @@
+from email import message
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required,permission_required
 from django.http.response import JsonResponse
@@ -10,6 +11,7 @@ from .models import CodigoCie
 from django.urls.base import reverse_lazy
 from .forms import CodigocieForms
 from .models import CodigoCie
+from django.contrib import messages
 
 class CodigoCieList(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required = ("codigocie.view_codigocie")
@@ -50,13 +52,18 @@ class CreateCodigoCie(LoginRequiredMixin,PermissionRequiredMixin,CreateView):
         try:
             action = request.POST['action']
             if action == "codigocie_add":
-                codigo_cie = CodigoCie()
-                codigo_cie.codigo_cie = request.POST['codigo_cie'] 
-                codigo_cie.diagnostico = request.POST['diagnostico']
-                codigo_cie.estado = 'Activo'
-                codigo_cie.save()
+                if request.POST['codigo_cie'].strip() != "" and request.POST['codigo_cie'].strip() != "":
+                    codigo_cie = CodigoCie()
+                    codigo_cie.codigo_cie = request.POST['codigo_cie'] 
+                    codigo_cie.diagnostico = request.POST['diagnostico']
+                    codigo_cie.estado = 'Activo'
+                    codigo_cie.save()
+                    messages.success(request,"Código: "+codigo_cie.codigo_cie+" registrado exitosamente!")
+                else:
+                    messages.error(request,"Error al registrar el código CIE, verifique la información a registrar")
         except Exception as e:
             data['error'] = 'Error al procesar la solicitud: ' + str(e)
+            messages.error(request,"Error al procesar la solicitud")
             print(data['error'])
 
         return redirect("indexCodigoCie") 
@@ -86,14 +93,18 @@ class UpdateCodigoCie(LoginRequiredMixin,PermissionRequiredMixin,UpdateView):
         try:
             action = request.POST['action']
             if action == 'codigocie_edit':
-                codigocie = CodigoCie.objects.get(pk = self.get_object().id_codigo)
-                codigocie.codigo_cie = request.POST['codigo_cie'] 
-                codigocie.diagnostico = request.POST['diagnostico']
-                codigocie.estado = 'Activo'
-                codigocie.save()
-        
+                if request.POST['codigo_cie'].strip() != "" and request.POST['codigo_cie'].strip() != "":
+                    codigocie = CodigoCie.objects.get(pk = self.get_object().id_codigo)
+                    codigocie.codigo_cie = request.POST['codigo_cie'] 
+                    codigocie.diagnostico = request.POST['diagnostico']
+                    codigocie.estado = 'Activo'
+                    codigocie.save()
+                    messages.success(request,"Código: "+codigocie.codigo_cie+" editado exitosamente!")
+                else:
+                    messages.error(request,"Error al modificar el código CIE, verifique la información a registrar")
         except Exception as e:
             data['error'] = str(e)
+            messages.error(request,"Error al procesar la solicitud")
             print(str(e))
         
         return redirect("indexCodigoCie")

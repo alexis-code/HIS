@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import CodigoCie
+from simple_history.admin import SimpleHistoryAdmin
 
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
